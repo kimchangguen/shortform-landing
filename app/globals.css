@@ -33,9 +33,27 @@ select {
     linear-gradient(180deg, #f9f9f9 0%, #f3f3f3 100%);
 }
 
+.shortform-typing-hero {
+  height: 800px !important;
+  width: 100%;
+  max-width: 1920px;
+  margin-inline: auto;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 1) 0 42%, rgba(247, 247, 247, 0.98) 74%),
+    linear-gradient(180deg, #f9f9f9 0%, #f3f3f3 100%);
+}
+
+.shortform-typing-stage {
+  height: 800px !important;
+}
+
+.shortform-slider-section {
+  height: 650px;
+}
+
 .shortform-phone-fan {
   position: relative;
-  height: 350px;
+  height: 430px;
   width: 100%;
   max-width: 1480px;
   margin-inline: auto;
@@ -47,7 +65,7 @@ select {
   position: absolute;
   left: var(--slot-x);
   top: var(--slot-y);
-  width: clamp(128px, 10.8vw, 166px);
+  width: clamp(142px, 12vw, 184px);
   aspect-ratio: 9 / 18.7;
   opacity: 1;
   transform: translate(-50%, -50%) rotate(var(--slot-rotate)) scale(var(--slot-scale));
@@ -147,8 +165,12 @@ select {
 }
 
 @media (max-width: 767px) {
+  .shortform-slider-section {
+    height: 520px;
+  }
+
   .shortform-phone-fan {
-    height: 286px;
+    height: 310px;
     margin-top: 0.75rem;
   }
 
@@ -191,8 +213,12 @@ select {
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {
+  .shortform-slider-section {
+    height: 600px;
+  }
+
   .shortform-phone-fan {
-    height: 360px;
+    height: 390px;
   }
 
   .shortform-phone-slot {
