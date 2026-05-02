@@ -5,3 +5,5 @@ dist
 *.tsbuildinfo
 .env*
 dev.*.log
+
+.vercel
