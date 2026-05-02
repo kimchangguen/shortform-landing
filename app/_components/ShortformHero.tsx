@@ -495,7 +495,7 @@ function PhoneFanCarousel() {
         </button>
 
         {visibleItems.map(({ slot, item }) => (
-          <PhoneCard key={slot.slot} item={item} slot={slot} direction={direction} />
+          <PhoneCard key={slot.slot} item={item} slot={slot} direction={direction} onSelect={setSelectedVideo} />
         ))}
 
         <button
@@ -524,6 +524,8 @@ function PhoneFanCarousel() {
           />
         ))}
       </div>
+
+      {selectedVideo && <ReelsModal item={selectedVideo} onClose={() => setSelectedVideo(null)} />}
     </div>
   );
 }
