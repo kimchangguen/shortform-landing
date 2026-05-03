@@ -30,8 +30,8 @@ const shortVideoSources = Array.from(
   (_, index) => `/videos/shorts/a%20(${index + 1}).mp4`,
 );
 
-const visitTypingFirstLine = "우리 매장을 찾아오는";
-const visitTypingSecondLine = "‘찾아오는 가게’가 됩니다";
+const visitTypingFirstLine = "우리 매장을 알아서";
+const visitTypingSecondLine = "'찾아오는 가게'가 됩니다";
 const visitTypingDelay = 34;
 
 function getRandomVideoIndex(currentIndex: number) {
