@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import type { LucideIcon } from "lucide-react";
 import { Camera, ChevronRight, Clapperboard, Lightbulb, Send } from "lucide-react";
+import { MegaHitPinnedSequence } from "./MegaHitPinnedSequence";
 
 type ProcessStep = {
   number: string;
@@ -106,17 +107,9 @@ function ProcessCard({ step }: { step: ProcessStep }) {
 
 export function RevenueProcessSection() {
   return (
-    <section id="production-process" className="bg-[#f8f8f8] px-4 pb-11 pt-10 text-center sm:px-6 lg:px-8">
+    <section id="production-process" className="bg-[#f8f8f8] px-4 text-center sm:px-6 lg:px-8">
       <div className="mx-auto w-full max-w-[1672px]">
-        <div className="break-keep font-black leading-[1.18] tracking-tight text-black">
-          <p className="text-[2.35rem] sm:text-[3.2rem] lg:text-[3.65rem]">32개 채널 240만명에 보내는</p>
-          <p className="mt-3 text-[2.15rem] sm:text-[3.35rem] lg:text-[3.8rem]">
-            맛집 메가히트 숏폼을 폭탄으로 뿌려 드립니다.
-          </p>
-          <h2 className="mt-5 text-[3.6rem] font-black leading-none text-[#4b1398] sm:text-[6rem] lg:text-[6.9rem]">
-            매출 터지는 4단계 프로세스
-          </h2>
-        </div>
+        <MegaHitPinnedSequence />
 
         <div className="mt-10 grid grid-cols-1 items-center gap-5 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)] lg:gap-4">
           {processSteps.map((step, index) => (

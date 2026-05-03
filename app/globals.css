@@ -293,6 +293,7 @@ select {
 }
 
 .solution-orbit-card {
+  --solution-card-scale: 1;
   position: absolute;
   z-index: 4;
   display: flex;
@@ -304,6 +305,17 @@ select {
   border-radius: 20px;
   background: white;
   box-shadow: 0 18px 34px rgba(0, 0, 0, 0.14);
+  transition:
+    transform 300ms ease-in-out,
+    background-color 300ms ease-in-out,
+    box-shadow 300ms ease-in-out;
+  will-change: transform;
+}
+
+.solution-orbit-card:hover {
+  --solution-card-scale: 1.06;
+  background: #f9fafb;
+  box-shadow: 0 24px 46px rgba(0, 0, 0, 0.22);
 }
 
 .solution-card-logo {
@@ -333,25 +345,25 @@ select {
 .solution-card-top {
   left: 50%;
   top: 0;
-  transform: translateX(-50%);
+  transform: translateX(-50%) scale(var(--solution-card-scale));
 }
 
 .solution-card-left {
   left: 0;
   top: 50%;
-  transform: translateY(-50%);
+  transform: translateY(-50%) scale(var(--solution-card-scale));
 }
 
 .solution-card-right {
   right: 0;
   top: 50%;
-  transform: translateY(-50%);
+  transform: translateY(-50%) scale(var(--solution-card-scale));
 }
 
 .solution-card-bottom {
   bottom: 0;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) scale(var(--solution-card-scale));
 }
 
 @media (max-width: 767px) {
@@ -394,7 +406,7 @@ select {
     bottom: auto;
     height: 9.8rem;
     width: 100%;
-    transform: none;
+    transform: scale(var(--solution-card-scale));
     border-radius: 1.25rem;
   }
 
