@@ -28,12 +28,12 @@ const pricingPlans = [
 function PricingCard({ plan }: { plan: (typeof pricingPlans)[number] }) {
   return (
     <article
-      className={`relative rounded-[1.45rem] bg-white px-7 pb-5 pt-8 shadow-[0_14px_34px_rgba(0,35,80,0.12)] ${
-        plan.featured ? "border-2 border-[#0b72f0] pt-16" : ""
+      className={`relative flex h-[700px] w-[335px] shrink-0 flex-col rounded-[1.45rem] border-2 bg-white px-7 pb-6 pt-20 shadow-[0_14px_34px_rgba(0,35,80,0.12)] ${
+        plan.featured ? "border-[#0b72f0]" : "border-transparent"
       }`}
     >
       {plan.featured ? (
-        <div className="absolute left-0 right-0 top-0 flex h-14 items-center justify-center rounded-t-[1.25rem] bg-[#0b72f0] text-[1.55rem] font-black text-white">
+        <div className="absolute left-[-2px] right-[-2px] top-[-2px] flex h-14 items-center justify-center rounded-t-[1.35rem] bg-[#0b72f0] text-[1.55rem] font-black text-white">
           <img src="/refund-pricing/crown.jpg" alt="" className="mr-3 h-7 w-7 object-contain" />
           BEST
         </div>
@@ -50,7 +50,7 @@ function PricingCard({ plan }: { plan: (typeof pricingPlans)[number] }) {
 
       <div className="mt-6 h-px w-full bg-[#d9e1ee]" />
 
-      <div className="mt-7 space-y-5 text-left">
+      <div className="mb-10 mt-7 space-y-5 text-left">
         {plan.items.map((item) => (
           <div key={item} className="border-b border-dashed border-[#d9e1ee] pb-4 last:border-b-0">
             <p className="flex items-center gap-4 break-keep text-[1.25rem] font-medium leading-tight text-[#071735]">
@@ -62,9 +62,9 @@ function PricingCard({ plan }: { plan: (typeof pricingPlans)[number] }) {
       </div>
 
       <div
-        className={`mt-14 rounded-xl px-6 py-5 text-center ${
+        className={`mt-auto flex h-[117px] flex-col items-center justify-center rounded-xl px-6 text-center ${
           plan.featured ? "bg-[#0b72f0] text-white" : "bg-[#eef4ff] text-[#071735]"
-        }`}
+        } ${plan.price === "120" ? "translate-y-[42px]" : ""}`}
       >
         <p className="font-black leading-none tracking-tight">
           <span className="text-[5.45rem]">{plan.price}</span>
@@ -100,7 +100,7 @@ export function RefundPricingSection() {
           </div>
         </div>
 
-        <div className="mx-auto mt-8 grid max-w-[1185px] grid-cols-1 gap-10 lg:grid-cols-3 lg:items-start lg:gap-10">
+        <div className="mx-auto mt-8 flex w-full max-w-[1185px] flex-col items-center justify-center gap-10 lg:flex-row lg:items-stretch lg:gap-10">
           {pricingPlans.map((plan) => (
             <PricingCard key={plan.title} plan={plan} />
           ))}

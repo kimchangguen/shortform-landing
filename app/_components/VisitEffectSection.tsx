@@ -2,7 +2,7 @@
 
 import { Heart, ThumbsUp, UsersRound } from "lucide-react";
 import type { ReactNode } from "react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const effectCards = [
   {
@@ -66,11 +66,20 @@ function FloatingIcon({
 }
 
 function InteractivePhoneVideo() {
-  const initialIndex = useMemo(() => Math.floor(Math.random() * shortVideoSources.length), []);
-  const [videoIndex, setVideoIndex] = useState(initialIndex);
+  const [isMounted, setIsMounted] = useState(false);
+  const [videoIndex, setVideoIndex] = useState(0);
   const [isVideoVisible, setIsVideoVisible] = useState(true);
 
   useEffect(() => {
+    setIsMounted(true);
+    setVideoIndex(Math.floor(Math.random() * shortVideoSources.length));
+  }, []);
+
+  useEffect(() => {
+    if (!isMounted) {
+      return;
+    }
+
     const intervalId = window.setInterval(() => {
       setIsVideoVisible(false);
 
@@ -83,7 +92,9 @@ function InteractivePhoneVideo() {
     return () => {
       window.clearInterval(intervalId);
     };
-  }, []);
+  }, [isMounted]);
+
+  const currentVideoSource = isMounted ? shortVideoSources[videoIndex] : "";
 
   return (
     <div className="relative mx-auto w-full max-w-[804px]">
@@ -103,11 +114,12 @@ function InteractivePhoneVideo() {
 
       <div className="absolute left-[31.4%] top-[6.1%] z-20 h-[83.1%] w-[32.5%] overflow-hidden rounded-[2rem] bg-black shadow-inner sm:rounded-[2.35rem]">
         <video
-          key={shortVideoSources[videoIndex]}
-          src={shortVideoSources[videoIndex]}
+          key={currentVideoSource || "pending-phone-video"}
+          {...(currentVideoSource ? { src: currentVideoSource } : {})}
           className={`h-full w-full object-cover transition-opacity duration-500 ${
             isVideoVisible ? "opacity-100" : "opacity-0"
           }`}
+          suppressHydrationWarning
           autoPlay
           muted
           loop

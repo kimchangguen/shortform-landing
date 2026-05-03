@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import {
   CalendarDays,
   CircleDollarSign,
@@ -11,23 +14,23 @@ import {
 const reasonCards = [
   {
     icon: "/bottom-conversion/reason-cost.jpg",
-    title: ["비용은 부담스럽고", "효과는 미미한 광고"],
-    description: ["지속적인 비용 지출에도 불구하고", "만족스러운 결과를 얻기 어렵습니다."],
+    title: ["업계 최저가, 최대 효율", "가성비 독보적"],
+    description: ["100만원 넘게 드는 숏폼", "20개를 300만원으로!", "콘텐츠 제작 비용은 줄이고,", "광고 효과는 극대화합니다."],
   },
   {
     icon: "/bottom-conversion/reason-time.jpg",
-    title: ["시간은 부족하고", "마케팅은 복잡한 현실"],
-    description: ["매장 운영만으로도 바쁜데,", "마케팅까지 신경 쓰기 어렵습니다."],
+    title: ["240만 팔로워", "공식 계정 네트워크"],
+    description: ["30개 이상의 인스타 파워계정,", "메타계정, 유튜브 채널", "총 240만 팔로워에게", "한 번에 뿌려드립니다."],
   },
   {
     icon: "/bottom-conversion/reason-competitor.jpg",
-    title: ["경쟁사는 앞서가는데", "우리는 제자리"],
-    description: ["마케팅을 망설이는 사이,", "경쟁사는 고객을 선점하고 있습니다."],
+    title: ["상위노출 + 스폰서드까지", "광고 셋팅 풀패키지"],
+    description: ["단순 업로드로 끝이 아닙니다.", "SNS 상위노출 최적화부터", "스폰서드 광고 셋팅까지", "성과를 위한 모든 과정을", "지원합니다."],
   },
   {
     icon: "/bottom-conversion/reason-start.jpg",
-    title: ["지금 시작하지 않으면", "더 큰 기회를 놓칩니다"],
-    description: ["고객의 선택은 오늘도 경쟁사로 향합니다.", "더 늦기 전에 시작해야 합니다."],
+    title: ["촬영부터 기획까지", "일사천리 원스톱 진행"],
+    description: ["사장님은 가게 운영에만 집중!", "기획, 촬영, 편집, 업로드까지", "모든 과정을 애드그릿이", "책임지고 빠르게 진행합니다."],
   },
 ];
 
@@ -164,18 +167,72 @@ function AdgritBox() {
   );
 }
 
+function ReasonsHeading() {
+  const headingRef = useRef<HTMLDivElement | null>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const node = headingRef.current;
+
+    if (!node) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.35 },
+    );
+
+    observer.observe(node);
+
+    return () => observer.disconnect();
+  }, []);
+
+  const lineClass = `transition-all duration-700 ease-out ${
+    isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+  }`;
+
+  return (
+    <div
+      ref={headingRef}
+      className="break-keep text-[2.05rem] font-black leading-[1.35] tracking-tight text-black sm:text-[2.8rem]"
+    >
+      <p className={lineClass} style={{ transitionDelay: "0ms" }}>
+        손님 모아드리는
+      </p>
+      <p className={lineClass} style={{ transitionDelay: "180ms" }}>
+        <span className="text-[#0b72f0]">애드그릿</span>에게 숏폼을 맡기는
+      </p>
+      <p className={lineClass} style={{ transitionDelay: "360ms" }}>
+        사장님들의 이유 4가지
+      </p>
+    </div>
+  );
+}
+
 export function BottomConversionSections() {
   return (
-    <section className="bg-[#f8f8f8] px-4 pb-20 pt-12 text-center sm:px-6 lg:px-8">
-      <div className="mx-auto w-full max-w-[864px]">
-        <div className="break-keep text-[2.05rem] font-black leading-[1.35] tracking-tight text-black sm:text-[2.8rem]">
-          <p>
-            손님 모아드리는 <span className="text-[#0b72f0]">애드그릿</span>을
-          </p>
-          <p>사장님들이 찾는 이유</p>
+    <>
+      <section className="bg-[#f9f8f6] px-4 py-[150px] text-center sm:px-6 sm:py-[170px] lg:px-8">
+        <div className="mx-auto w-[43%] min-w-[320px] max-w-[468px] bg-[#f9f8f6]">
+          <img
+            src="/09-02-transparent.png"
+            alt=""
+            className="mx-auto h-auto w-full max-w-full bg-transparent object-contain mix-blend-multiply"
+          />
         </div>
+      </section>
 
-        <div className="mt-7 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <section className="bg-[#f9f8f6] px-4 pb-20 pt-0 text-center sm:px-6 lg:px-8">
+        <div className="mx-auto w-full max-w-[864px]">
+          <ReasonsHeading />
+
+        <div className="mt-[150px] grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {reasonCards.map((card) => (
             <ReasonCard key={card.title.join("")} card={card} />
           ))}
@@ -196,6 +253,7 @@ export function BottomConversionSections() {
           <AdgritBox />
         </div>
       </div>
-    </section>
+      </section>
+    </>
   );
 }
