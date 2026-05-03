@@ -2,7 +2,7 @@
 
 import type { CSSProperties, KeyboardEvent, PointerEvent } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight, Heart, MessageCircle, Send } from "lucide-react";
+import { ChevronLeft, ChevronRight, Heart, MessageCircle, Send, X } from "lucide-react";
 
 type ShortformVideo = {
   id: number;
@@ -136,6 +136,10 @@ function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
 }
 
+function wrapIndex(value: number, length: number) {
+  return ((value % length) + length) % length;
+}
+
 function partLength(parts: TextPart[]) {
   return parts.reduce((total, part) => total + Array.from(part.text).length, 0);
 }
@@ -239,26 +243,44 @@ function PhoneCard({
   item,
   slot,
   direction,
+  isPaused,
   onSelect,
 }: {
   item: ShortformVideo;
   slot: PhoneSlot;
   direction: number;
+  isPaused: boolean;
   onSelect: (item: ShortformVideo) => void;
 }) {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const style = {
     "--slot-x": slot.x,
     "--slot-y": slot.y,
     "--slot-rotate": slot.rotate,
     "--slot-scale": slot.scale.toString(),
-    "--enter-x": direction > 0 ? "18px" : "-18px",
+    "--enter-x": direction > 0 ? "-18px" : "18px",
     zIndex: slot.z,
   } as CSSProperties;
+
+  useEffect(() => {
+    const video = videoRef.current;
+
+    if (!video) {
+      return;
+    }
+
+    if (isPaused) {
+      video.pause();
+      return;
+    }
+
+    video.muted = true;
+    void video.play().catch(() => undefined);
+  }, [isPaused, item.videoSrc]);
 
   return (
     <div className="shortform-phone-slot" data-slot={slot.slot} style={style}>
       <article
-        key={`${item.id}-${slot.slot}`}
         className="shortform-phone-shell cursor-pointer"
         role="button"
         tabIndex={0}
@@ -275,6 +297,7 @@ function PhoneCard({
         <div className="shortform-phone-screen">
           {item.videoSrc ? (
             <video
+              ref={videoRef}
               className="absolute inset-0 h-full w-full object-cover"
               src={item.videoSrc}
               poster={item.poster}
@@ -287,54 +310,6 @@ function PhoneCard({
           ) : (
             <img className="absolute inset-0 h-full w-full object-cover" src={item.poster} alt="" draggable={false} />
           )}
-
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.45)_0%,rgba(0,0,0,0.08)_43%,rgba(0,0,0,0.78)_100%)]" />
-
-          <div className="absolute left-[7%] right-[7%] top-[4%] flex items-center justify-between text-[0.55rem] font-extrabold text-white sm:text-[0.62rem]">
-            <span>9:31</span>
-            <span className="flex items-center gap-1">
-              <span className="h-1.5 w-3 rounded-sm border border-white/90" />
-              <span className="h-1.5 w-1 rounded-sm bg-white" />
-            </span>
-          </div>
-
-          <div className="absolute left-[7%] top-[11%] text-white">
-            <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" strokeWidth={3} />
-          </div>
-
-          <div className="absolute left-[9%] right-[9%] top-[24%] text-center text-white [text-shadow:0_2px_8px_rgba(0,0,0,0.55)]">
-            <p className="break-keep text-[0.92rem] font-black leading-tight sm:text-[1.08rem]">{item.headline}</p>
-            <p className="mt-1 break-keep text-[0.75rem] font-black leading-tight sm:text-[0.88rem]">{item.subline}</p>
-          </div>
-
-          <div className="absolute bottom-[20%] right-[7%] flex flex-col items-center gap-2 text-white">
-            <div className="flex flex-col items-center">
-              <Heart className="h-5 w-5 fill-white sm:h-6 sm:w-6" strokeWidth={2.5} />
-              <span className="mt-0.5 text-[0.48rem] font-black sm:text-[0.55rem]">{item.likes}</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <MessageCircle className="h-5 w-5 fill-white sm:h-6 sm:w-6" strokeWidth={2.5} />
-              <span className="mt-0.5 text-[0.48rem] font-black sm:text-[0.55rem]">{item.comments}</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <Send className="h-4 w-4 fill-white sm:h-5 sm:w-5" strokeWidth={2.5} />
-              <span className="mt-0.5 text-[0.48rem] font-black sm:text-[0.55rem]">{item.shares}</span>
-            </div>
-          </div>
-
-          <div className="absolute bottom-[7%] left-[7%] right-[7%] text-white">
-            <div className="flex items-center gap-2">
-              <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-gradient-to-br from-pink-500 via-orange-400 to-yellow-300 text-[0.52rem] font-black">
-                ad
-              </span>
-              <span className="min-w-0 flex-1 truncate text-[0.58rem] font-black sm:text-[0.66rem]">{item.handle}</span>
-              <span className="rounded-full border border-white/70 px-2 py-0.5 text-[0.48rem] font-black sm:text-[0.55rem]">
-                팔로우
-              </span>
-            </div>
-            <p className="mt-1 truncate text-[0.58rem] font-black sm:text-[0.66rem]">{item.caption}</p>
-            <div className="mt-2 h-1 w-20 rounded-full bg-white/80" />
-          </div>
         </div>
       </article>
     </div>
@@ -342,10 +317,45 @@ function PhoneCard({
 }
 
 function ReelsModal({ item, onClose }: { item: ShortformVideo; onClose: () => void }) {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  const stopVideo = useCallback(() => {
+    const video = videoRef.current;
+
+    if (!video) {
+      return;
+    }
+
+    video.pause();
+    video.muted = true;
+
+    try {
+      video.currentTime = 0;
+    } catch {
+      // Metadata can arrive after close on slower devices.
+    }
+  }, []);
+
+  const closeModal = useCallback(() => {
+    stopVideo();
+    setIsVisible(false);
+    onClose();
+  }, [onClose, stopVideo]);
+
   useEffect(() => {
+    const animationFrameId = window.requestAnimationFrame(() => setIsVisible(true));
+    const video = videoRef.current;
+
+    if (video) {
+      video.muted = false;
+      video.volume = 1;
+      void video.play().catch(() => undefined);
+    }
+
     const onKeyDown = (event: globalThis.KeyboardEvent) => {
       if (event.key === "Escape") {
-        onClose();
+        closeModal();
       }
     };
 
@@ -353,71 +363,76 @@ function ReelsModal({ item, onClose }: { item: ShortformVideo; onClose: () => vo
     window.addEventListener("keydown", onKeyDown);
 
     return () => {
+      window.cancelAnimationFrame(animationFrameId);
+      stopVideo();
       document.body.style.overflow = "";
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [onClose]);
+  }, [closeModal, stopVideo]);
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/82 px-4 py-6"
+      className={`fixed inset-0 z-[100] flex items-center justify-center bg-black/80 px-4 py-6 transition-opacity duration-200 ${
+        isVisible ? "opacity-100" : "opacity-0"
+      }`}
       role="dialog"
       aria-modal="true"
-      aria-label={`${item.id}번 숏폼 릴스 보기`}
+      aria-label={`${item.id}번 숏폼 원본 영상 보기`}
+      onClick={closeModal}
     >
       <button
         type="button"
-        aria-label="릴스 닫기"
-        className="absolute left-5 top-5 z-20 grid h-12 w-12 place-items-center rounded-full bg-black/35 text-white backdrop-blur-sm"
-        onClick={onClose}
+        aria-label="영상 닫기"
+        className="absolute right-4 top-4 z-[110] grid h-11 w-11 place-items-center rounded-full bg-black/45 text-white shadow-lg backdrop-blur-sm transition-colors hover:bg-black/65 focus:outline-none focus:ring-4 focus:ring-white/25 sm:right-6 sm:top-6 sm:h-12 sm:w-12"
+        onClick={(event) => {
+          event.stopPropagation();
+          closeModal();
+        }}
       >
-        <ChevronLeft className="h-8 w-8" strokeWidth={3.2} />
+        <X className="h-7 w-7" strokeWidth={3} />
       </button>
 
-      <div className="relative h-[min(86vh,820px)] w-[min(92vw,462px)] overflow-hidden rounded-[2rem] bg-black shadow-[0_24px_80px_rgba(0,0,0,0.45)]">
+      <div
+        className={`relative aspect-[9/16] h-[min(88vh,900px)] max-h-[90vh] max-w-[92vw] overflow-hidden rounded-[1.5rem] bg-black shadow-[0_24px_80px_rgba(0,0,0,0.5)] transition-transform duration-200 ${
+          isVisible ? "scale-100" : "scale-[0.985]"
+        }`}
+        onClick={(event) => event.stopPropagation()}
+      >
         <video
-          className="absolute inset-0 h-full w-full object-cover"
+          ref={videoRef}
+          className="h-full w-full object-contain"
           src={item.videoSrc}
           poster={item.poster}
-          muted
+          autoPlay
+          controls
           loop
           playsInline
-          autoPlay
           preload="metadata"
         />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.42)_0%,rgba(0,0,0,0)_46%,rgba(0,0,0,0.72)_100%)]" />
 
-        <div className="absolute left-5 right-5 top-5 flex items-center justify-between text-white">
-          <div className="flex items-center gap-3">
-            <ChevronLeft className="h-7 w-7" strokeWidth={3} />
-            <span className="text-lg font-black">Reels</span>
-          </div>
-          <span className="text-sm font-black">9:31</span>
-        </div>
+        <div className="pointer-events-none absolute inset-0 text-white">
+          <button
+            type="button"
+            aria-label="영상 닫기"
+            className="pointer-events-auto absolute left-4 top-4 grid h-11 w-11 place-items-center rounded-full bg-black/35 text-white backdrop-blur-sm transition-colors hover:bg-black/55 focus:outline-none focus:ring-4 focus:ring-white/25"
+            onClick={closeModal}
+          >
+            <ChevronLeft className="h-8 w-8" strokeWidth={3.2} />
+          </button>
 
-        <div className="absolute bottom-8 left-5 right-20 text-white">
-          <div className="flex items-center gap-2">
-            <span className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-pink-500 via-orange-400 to-yellow-300 text-xs font-black">
-              ad
-            </span>
-            <span className="text-sm font-black">{item.handle}</span>
-            <span className="rounded-full border border-white/70 px-3 py-1 text-xs font-black">팔로우</span>
-          </div>
-          <p className="mt-3 break-keep text-base font-black">{item.caption}</p>
-        </div>
-
-        <div className="absolute bottom-9 right-5 flex flex-col items-center gap-5 text-white">
-          <div className="flex flex-col items-center">
-            <Heart className="h-9 w-9 fill-white" strokeWidth={2.4} />
-            <span className="mt-1 text-xs font-black">{item.likes}</span>
-          </div>
-          <div className="flex flex-col items-center">
-            <MessageCircle className="h-9 w-9 fill-white" strokeWidth={2.4} />
-            <span className="mt-1 text-xs font-black">{item.comments}</span>
-          </div>
-          <div className="flex flex-col items-center">
-            <Send className="h-8 w-8 fill-white" strokeWidth={2.4} />
-            <span className="mt-1 text-xs font-black">{item.shares}</span>
+          <div className="absolute bottom-24 right-4 flex flex-col items-center gap-5 drop-shadow-[0_2px_8px_rgba(0,0,0,0.75)] sm:bottom-28">
+            <div className="flex flex-col items-center">
+              <Heart className="h-9 w-9 fill-white" strokeWidth={2.4} />
+              <span className="mt-1 text-xs font-black">{item.likes}</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <MessageCircle className="h-9 w-9 fill-white" strokeWidth={2.4} />
+              <span className="mt-1 text-xs font-black">{item.comments}</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <Send className="h-8 w-8 fill-white" strokeWidth={2.4} />
+              <span className="mt-1 text-xs font-black">{item.shares}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -426,7 +441,7 @@ function ReelsModal({ item, onClose }: { item: ShortformVideo; onClose: () => vo
 }
 
 function PhoneFanCarousel() {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [firstVideoIndex, setFirstVideoIndex] = useState(0);
   const [direction, setDirection] = useState(1);
   const [selectedVideo, setSelectedVideo] = useState<ShortformVideo | null>(null);
   const startXRef = useRef<number | null>(null);
@@ -434,21 +449,25 @@ function PhoneFanCarousel() {
 
   const moveBy = useCallback((delta: number) => {
     setDirection(delta > 0 ? 1 : -1);
-    setActiveIndex((current) => (current + delta + shortformVideos.length) % shortformVideos.length);
+    setFirstVideoIndex((current) => wrapIndex(current - delta, shortformVideos.length));
   }, []);
 
   useEffect(() => {
-    const timer = window.setInterval(() => moveBy(1), 4800);
+    if (selectedVideo) {
+      return;
+    }
+
+    const timer = window.setInterval(() => moveBy(1), 4000);
     return () => window.clearInterval(timer);
-  }, [moveBy]);
+  }, [moveBy, selectedVideo]);
 
   const visibleItems = useMemo(
     () =>
       phoneSlots.map((slot) => ({
         slot,
-        item: shortformVideos[(activeIndex + slot.slot) % shortformVideos.length],
+        item: shortformVideos[wrapIndex(firstVideoIndex + slot.slot, shortformVideos.length)],
       })),
-    [activeIndex],
+    [firstVideoIndex],
   );
 
   const handlePointerDown = (event: PointerEvent<HTMLDivElement>) => {
@@ -468,12 +487,12 @@ function PhoneFanCarousel() {
       return;
     }
 
-    moveBy(distance < 0 ? 1 : -1);
+    moveBy(distance > 0 ? 1 : -1);
   };
 
   const dotCount = 5;
   const pageSize = Math.ceil(shortformVideos.length / dotCount);
-  const activeDot = Math.min(dotCount - 1, Math.floor(activeIndex / pageSize));
+  const activeDot = Math.min(dotCount - 1, Math.floor(wrapIndex(firstVideoIndex, shortformVideos.length) / pageSize));
 
   return (
     <div className="relative z-10 w-full">
@@ -495,7 +514,14 @@ function PhoneFanCarousel() {
         </button>
 
         {visibleItems.map(({ slot, item }) => (
-          <PhoneCard key={slot.slot} item={item} slot={slot} direction={direction} onSelect={setSelectedVideo} />
+          <PhoneCard
+            key={item.id}
+            item={item}
+            slot={slot}
+            direction={direction}
+            isPaused={Boolean(selectedVideo)}
+            onSelect={setSelectedVideo}
+          />
         ))}
 
         <button
@@ -519,7 +545,7 @@ function PhoneFanCarousel() {
             }`}
             onClick={() => {
               setDirection(index >= activeDot ? 1 : -1);
-              setActiveIndex(Math.min(index * pageSize, shortformVideos.length - 1));
+              setFirstVideoIndex(Math.min(index * pageSize, shortformVideos.length - 1));
             }}
           />
         ))}
@@ -533,14 +559,11 @@ function PhoneFanCarousel() {
 export function ShortformHero() {
   const typingRef = useRef<HTMLElement | null>(null);
   const isHeroReleasedRef = useRef(false);
-  const hasStartedRef = useRef(false);
-  const isTypingRef = useRef(false);
-  const isPhaseCompleteRef = useRef(false);
+  const isTypingRef = useRef(true);
   const currentPhaseRef = useRef<TypingPhase>(0);
   const touchStartYRef = useRef(0);
   const [activePhase, setActivePhase] = useState<TypingPhase>(0);
-  const [typedCount, setTypedCount] = useState(0);
-  const [hasTypingStarted, setHasTypingStarted] = useState(false);
+  const [typedCount, setTypedCount] = useState(1);
 
   const canPinHero = useCallback(() => {
     const section = typingRef.current;
@@ -550,30 +573,22 @@ export function ShortformHero() {
     }
 
     const rect = section.getBoundingClientRect();
-    return rect.top <= 0 && rect.bottom > 0;
+    return rect.top <= 1 && rect.bottom > 0;
   }, []);
 
   const beginTyping = useCallback((phase: TypingPhase) => {
+    if (currentPhaseRef.current === phase) {
+      return;
+    }
+
     currentPhaseRef.current = phase;
     isTypingRef.current = true;
-    isPhaseCompleteRef.current = false;
     setActivePhase(phase);
-    setTypedCount(0);
-    setHasTypingStarted(true);
+    setTypedCount(1);
   }, []);
 
   const triggerNextSentence = useCallback(() => {
-    if (isHeroReleasedRef.current || isTypingRef.current) {
-      return;
-    }
-
-    if (!hasStartedRef.current) {
-      hasStartedRef.current = true;
-      beginTyping(0);
-      return;
-    }
-
-    if (!isPhaseCompleteRef.current || currentPhaseRef.current === 2) {
+    if (isHeroReleasedRef.current || isTypingRef.current || currentPhaseRef.current === 2) {
       return;
     }
 
@@ -581,56 +596,46 @@ export function ShortformHero() {
   }, [beginTyping]);
 
   useEffect(() => {
-    if (!hasTypingStarted || !isTypingRef.current) {
-      return;
-    }
-
     const totalLength = partLength(typingMessages[activePhase]);
-    let intervalId: number | undefined;
+    const intervalId = window.setInterval(() => {
+      setTypedCount((currentCount) => {
+        const nextCount = Math.min(currentCount + 1, totalLength);
 
-    const timeoutId = window.setTimeout(() => {
-      intervalId = window.setInterval(() => {
-        setTypedCount((currentCount) => {
-          const nextCount = Math.min(currentCount + 1, totalLength);
+        if (nextCount === totalLength) {
+          window.clearInterval(intervalId);
+          isTypingRef.current = false;
 
-          if (nextCount === totalLength) {
-            if (intervalId) {
-              window.clearInterval(intervalId);
-            }
-
-            isTypingRef.current = false;
-            isPhaseCompleteRef.current = true;
-
-            if (activePhase === 2) {
-              isHeroReleasedRef.current = true;
-            }
+          if (activePhase === 2) {
+            isHeroReleasedRef.current = true;
           }
+        }
 
-          return nextCount;
-        });
-      }, activePhase === 2 ? 38 : 30);
-    }, activePhase === 0 ? 80 : 110);
+        return nextCount;
+      });
+    }, activePhase === 2 ? 38 : 30);
 
     return () => {
-      window.clearTimeout(timeoutId);
-
-      if (intervalId) {
-        window.clearInterval(intervalId);
-      }
+      window.clearInterval(intervalId);
     };
-  }, [activePhase, hasTypingStarted]);
+  }, [activePhase]);
 
   useEffect(() => {
+    const lockToHeroTop = () => {
+      const section = typingRef.current;
+
+      if (section) {
+        window.scrollTo({ top: section.offsetTop, behavior: "instant" });
+      }
+    };
+
     const onWheel = (event: WheelEvent) => {
-      if (!canPinHero()) {
+      if (!canPinHero() || event.deltaY <= 1) {
         return;
       }
 
       event.preventDefault();
-
-      if (event.deltaY > 0) {
-        triggerNextSentence();
-      }
+      lockToHeroTop();
+      triggerNextSentence();
     };
 
     const onTouchStart = (event: TouchEvent) => {
@@ -643,14 +648,16 @@ export function ShortformHero() {
       }
 
       const currentY = event.touches[0]?.clientY ?? touchStartYRef.current;
-      const delta = touchStartYRef.current - currentY;
+      const deltaY = touchStartYRef.current - currentY;
 
-      event.preventDefault();
-
-      if (delta > 0) {
-        triggerNextSentence();
+      if (deltaY <= 3) {
+        touchStartYRef.current = currentY;
+        return;
       }
 
+      event.preventDefault();
+      lockToHeroTop();
+      triggerNextSentence();
       touchStartYRef.current = currentY;
     };
 
@@ -665,14 +672,14 @@ export function ShortformHero() {
     };
   }, [canPinHero, triggerNextSentence]);
 
-  const firstOpacity = hasTypingStarted && activePhase === 0 ? 1 : 0;
-  const secondOpacity = hasTypingStarted && activePhase === 1 ? 1 : 0;
-  const thirdOpacity = hasTypingStarted && activePhase === 2 ? 1 : 0;
+  const firstOpacity = activePhase === 0 ? 1 : 0;
+  const secondOpacity = activePhase === 1 ? 1 : 0;
+  const thirdOpacity = activePhase === 2 ? 1 : 0;
 
   return (
     <>
-      <section ref={typingRef} id="top" className="shortform-typing-hero relative mx-auto !h-[800px] w-full max-w-[1920px] bg-[#f7f7f7]">
-        <div className="shortform-typing-stage sticky top-0 z-10 grid !h-[800px] place-items-center overflow-hidden px-4 text-center sm:px-6 lg:px-8">
+      <section ref={typingRef} id="top" className="shortform-typing-hero relative mx-auto mt-0 w-full max-w-[1920px] bg-[#f7f7f7] pt-0">
+        <div className="shortform-typing-stage sticky top-0 z-10 grid !h-[800px] place-items-center overflow-hidden px-4 pt-0 text-center sm:px-6 lg:px-8">
           <div className="relative flex h-full w-full max-w-[1920px] items-center justify-center">
             <div
               className="absolute inset-x-0 mx-auto w-fit transition-opacity duration-200"

@@ -37,7 +37,8 @@ select {
   height: 800px !important;
   width: 100%;
   max-width: 1920px;
-  margin-inline: auto;
+  margin: 0 auto;
+  padding-top: 0;
   background:
     radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 1) 0 42%, rgba(247, 247, 247, 0.98) 74%),
     linear-gradient(180deg, #f9f9f9 0%, #f3f3f3 100%);
@@ -45,6 +46,10 @@ select {
 
 .shortform-typing-stage {
   height: 800px !important;
+  margin-top: 0;
+  padding-top: 0;
+  position: sticky;
+  top: 0;
 }
 
 .shortform-slider-section {
@@ -71,10 +76,10 @@ select {
   transform: translate(-50%, -50%) rotate(var(--slot-rotate)) scale(var(--slot-scale));
   transform-origin: 50% 62%;
   transition:
-    left 420ms ease,
-    top 420ms ease,
-    opacity 300ms ease,
-    transform 420ms ease;
+    left 4000ms linear,
+    top 4000ms linear,
+    opacity 4000ms linear,
+    transform 4000ms linear;
 }
 
 .shortform-phone-shell {
@@ -87,7 +92,7 @@ select {
     0 20px 24px rgba(0, 0, 0, 0.18),
     0 7px 0 rgba(255, 255, 255, 0.85);
   padding: 4.2%;
-  animation: shortform-phone-swap 430ms ease both;
+  animation: shortform-phone-swap 4000ms linear both;
 }
 
 .shortform-phone-shell::before {
