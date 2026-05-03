@@ -80,9 +80,10 @@ function CircularArrows() {
 
 export function ConversionSolutionSections() {
   return (
-    <section className="bg-[#f8f8f8] px-4 py-24 text-center sm:px-6 sm:py-28 lg:px-8 lg:py-32">
+    <section className="bg-[#f8f8f8] px-4 pb-16 pt-0 text-center sm:px-6 sm:pb-28 lg:px-8 lg:pb-32">
       <div className="mx-auto flex w-full max-w-[1920px] flex-col items-center">
-        <div className="solution-diagram mx-auto mt-16 sm:mt-20 lg:mt-24">
+        {/* scale 수치를 높여 전체 크기를 키우고, 커진 만큼 위아래 간격(my-40)을 확보했습니다. */}
+        <div className="solution-diagram mx-auto my-12" style={{ zoom: 1.2, transform: "scale(1.2)", transformOrigin: "center top" }}>
           <CircularArrows />
 
           <div className="solution-center-circle">

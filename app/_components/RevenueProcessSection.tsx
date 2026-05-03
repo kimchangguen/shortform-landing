@@ -111,7 +111,7 @@ export function RevenueProcessSection() {
       <div className="mx-auto w-full max-w-[1672px]">
         <MegaHitPinnedSequence />
 
-        <div className="mt-10 grid grid-cols-1 items-center gap-5 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)] lg:gap-4">
+        <div className="mt-0 grid grid-cols-1 items-center gap-5 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)] lg:gap-4">
           {processSteps.map((step, index) => (
             <Fragment key={step.number}>
               <ProcessCard step={step} />

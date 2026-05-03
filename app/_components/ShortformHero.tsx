@@ -714,23 +714,10 @@ export function ShortformHero() {
         </div>
       </section>
 
-      <section className="shortform-hero shortform-slider-section relative isolate overflow-hidden bg-[#f7f7f7] px-4 text-black sm:px-6 lg:px-8">
-        <div className="relative mx-auto flex h-full w-full max-w-[1920px] flex-col items-center justify-center">
+      <section className="shortform-hero shortform-slider-section relative isolate mb-0 !h-auto overflow-hidden bg-[#f7f7f7] px-4 pb-0 text-black sm:px-6 lg:px-8">
+        <div className="relative mx-auto mb-0 flex h-auto w-full max-w-[1920px] flex-col items-center justify-center pb-0">
           <PhoneFanCarousel />
 
-          <div className="relative z-20 mt-4 w-full max-w-[884px] px-2 sm:px-0">
-            <ButtonBurst side="left" />
-            <ButtonBurst side="right" />
-            <a
-              href="#consultation"
-              className="group flex min-h-[4.5rem] w-full items-center justify-center gap-2 rounded-[1.25rem] bg-[#e10b04] px-3 text-center text-[1rem] font-black leading-tight text-white shadow-[0_16px_24px_rgba(225,11,4,0.25),0_6px_0_rgba(255,255,255,0.7)_inset] transition-transform hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-red-200 min-[380px]:text-[1.05rem] sm:min-h-[5.8rem] sm:gap-5 sm:px-5 sm:text-[1.95rem] lg:min-h-[7rem] lg:text-[2.45rem]"
-            >
-              <span className="min-w-0 break-keep">무료 매장 진단받고 노출 구조 확인하기</span>
-              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white text-[#111] shadow-sm min-[380px]:h-9 min-[380px]:w-9 sm:h-12 sm:w-12">
-                <ChevronRight className="h-6 w-6 transition-transform group-hover:translate-x-0.5 min-[380px]:h-7 min-[380px]:w-7 sm:h-10 sm:w-10" strokeWidth={4} />
-              </span>
-            </a>
-          </div>
         </div>
       </section>
     </>

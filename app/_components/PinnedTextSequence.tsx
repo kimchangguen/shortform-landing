@@ -1,207 +1,173 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { ChefHat, UsersRound } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 type MessagePart = {
   text: string;
   accent?: boolean;
+  breakAfter?: boolean;
+  hero?: boolean;
+  underline?: boolean;
+  dots?: boolean;
 };
 
 type PinnedMessage = {
   id: string;
   parts: MessagePart[];
+  icon?: "chef" | "people";
 };
 
 const pinnedMessages: PinnedMessage[] = [
   {
     id: "slow-marketing",
     parts: [
-      { text: "비싸고 오래 걸리는", accent: true },
-      { text: " 마케팅," },
+      { text: "비싸고 오래 걸리는", breakAfter: true },
+      { text: "마케팅,", accent: true, hero: true },
     ],
   },
   {
     id: "time-money",
     parts: [
-      { text: "돈과 시간", accent: true },
-      { text: " 쓰고 결과가 만족스럽지 않으시죠?" },
+      { text: "돈과 시간 쓰고 결과가", breakAfter: true },
+      { text: "만족스럽지 않으시죠?" },
     ],
   },
   {
     id: "not-your-fault",
     parts: [
-      { text: "사장님 잘못", accent: true },
+      { text: "사장님 " },
+      { text: "잘못", accent: true, underline: true },
       { text: "이 아니에요" },
     ],
   },
   {
     id: "world-changed",
     parts: [
-      { text: "세상이 바뀌어서", accent: true },
-      { text: " 그래요" },
+      { text: "세상이 바뀌어서 " },
+      { text: "그래요", dots: true },
     ],
   },
   {
     id: "make-food",
+    icon: "chef",
     parts: [
-      { text: "사장님은 음식만", accent: true },
+      { text: "사장님은", breakAfter: true },
+      { text: "음식만", accent: true },
       { text: " 만드세요" },
     ],
   },
   {
     id: "we-bring",
+    icon: "people",
     parts: [
-      { text: "손님은 저희가", accent: true },
+      { text: "손님은", breakAfter: true },
+      { text: "저희가", accent: true, underline: true },
       { text: " 모읍니다." },
     ],
   },
 ];
 
-const lastMessageIndex = pinnedMessages.length - 1;
+const iconMap = {
+  chef: ChefHat,
+  people: UsersRound,
+};
 
 export function PinnedTextSequence({ className = "" }: { className?: string }) {
   const sectionRef = useRef<HTMLElement | null>(null);
-  const currentIndexRef = useRef(0);
-  const isSequenceReleasedRef = useRef(false);
-  const isSwitchingRef = useRef(false);
-  const switchTimeoutRef = useRef<number | null>(null);
-  const touchStartYRef = useRef(0);
-  const [activeIndex, setActiveIndex] = useState(0);
-
-  const canPinSequence = useCallback(() => {
-    const section = sectionRef.current;
-
-    if (!section || isSequenceReleasedRef.current) {
-      return false;
-    }
-
-    const rect = section.getBoundingClientRect();
-    return rect.top <= 1 && rect.bottom > window.innerHeight;
-  }, []);
-
-  const beginSwitch = useCallback((nextIndex: number) => {
-    if (isSwitchingRef.current || currentIndexRef.current === nextIndex) {
-      return;
-    }
-
-    currentIndexRef.current = nextIndex;
-    isSwitchingRef.current = true;
-    setActiveIndex(nextIndex);
-
-    if (switchTimeoutRef.current) {
-      window.clearTimeout(switchTimeoutRef.current);
-    }
-
-    switchTimeoutRef.current = window.setTimeout(() => {
-      isSwitchingRef.current = false;
-
-      if (nextIndex === lastMessageIndex) {
-        isSequenceReleasedRef.current = true;
-      }
-    }, 220);
-  }, []);
-
-  const triggerNextSentence = useCallback(() => {
-    if (isSequenceReleasedRef.current || isSwitchingRef.current || currentIndexRef.current === lastMessageIndex) {
-      return;
-    }
-
-    beginSwitch(currentIndexRef.current + 1);
-  }, [beginSwitch]);
+  const [isInView, setIsInView] = useState(false);
 
   useEffect(() => {
-    const lockToSequenceTop = () => {
-      const section = sectionRef.current;
+    const section = sectionRef.current;
 
-      if (section) {
-        window.scrollTo({
-          top: section.getBoundingClientRect().top + window.scrollY,
-          behavior: "instant",
-        });
-      }
-    };
+    if (!section) {
+      return;
+    }
 
-    const onWheel = (event: WheelEvent) => {
-      if (!canPinSequence() || event.deltaY <= 1) {
-        return;
-      }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      { threshold: 0.15 },
+    );
 
-      event.preventDefault();
-      lockToSequenceTop();
-      triggerNextSentence();
-    };
-
-    const onTouchStart = (event: TouchEvent) => {
-      touchStartYRef.current = event.touches[0]?.clientY ?? 0;
-    };
-
-    const onTouchMove = (event: TouchEvent) => {
-      if (!canPinSequence()) {
-        return;
-      }
-
-      const currentY = event.touches[0]?.clientY ?? touchStartYRef.current;
-      const deltaY = touchStartYRef.current - currentY;
-
-      if (deltaY <= 3) {
-        touchStartYRef.current = currentY;
-        return;
-      }
-
-      event.preventDefault();
-      lockToSequenceTop();
-      triggerNextSentence();
-      touchStartYRef.current = currentY;
-    };
-
-    window.addEventListener("wheel", onWheel, { passive: false });
-    window.addEventListener("touchstart", onTouchStart, { passive: true });
-    window.addEventListener("touchmove", onTouchMove, { passive: false });
+    observer.observe(section);
 
     return () => {
-      window.removeEventListener("wheel", onWheel);
-      window.removeEventListener("touchstart", onTouchStart);
-      window.removeEventListener("touchmove", onTouchMove);
-
-      if (switchTimeoutRef.current) {
-        window.clearTimeout(switchTimeoutRef.current);
-      }
+      observer.disconnect();
     };
-  }, [canPinSequence, triggerNextSentence]);
+  }, []);
 
   return (
     <section
       ref={sectionRef}
-      className={`relative z-10 h-[300vh] w-full max-w-full bg-[#f8f8f8] ${className}`}
-      style={{ overflowX: "clip" }}
+      className={`relative z-10 w-full max-w-full overflow-hidden bg-[#f9f8f6] py-48 ${className}`}
     >
-      <div className="sticky top-0 z-10 grid h-screen w-full max-w-full place-items-center overflow-hidden px-4 text-center sm:px-6 lg:px-8">
-        <div className="relative flex h-full w-full max-w-full items-center justify-center overflow-hidden">
-          <div className="relative flex h-56 w-full max-w-full items-center justify-center overflow-hidden">
-            {pinnedMessages.map((message, index) => (
-              <p
-                key={message.id}
-                className="absolute inset-0 flex w-full max-w-full items-center justify-center break-keep px-4 text-center text-4xl font-black leading-tight tracking-tight text-[#061735] [overflow-wrap:anywhere] transition-opacity duration-200 md:text-5xl lg:text-6xl"
-                style={{ opacity: activeIndex === index ? 1 : 0 }}
+      <div className="mx-auto flex w-full max-w-[920px] flex-col items-center justify-center px-5 text-center sm:px-8 lg:px-10">
+        {pinnedMessages.map((message, index) => {
+          const Icon = message.icon ? iconMap[message.icon] : null;
+          const isIconRow = Boolean(Icon);
+
+          return (
+            <div key={message.id} className="w-full">
+              <div
+                className={`flex w-full items-center justify-center gap-5 transition-all duration-300 ${
+                  isInView ? "translate-y-0 opacity-100" : "translate-y-5 opacity-0"
+                } ${isIconRow ? "text-left" : "text-center"}`}
+                style={{ transitionDelay: `${index * 150}ms` }}
               >
-                <span className="block w-full max-w-[64rem]">
+                {Icon ? (
+                  <div className="grid h-16 w-16 shrink-0 place-items-center rounded-full border border-[#F3D990] bg-[#FFF3D8] text-black sm:h-20 sm:w-20">
+                    <Icon className="h-9 w-9 sm:h-11 sm:w-11" strokeWidth={2.4} />
+                  </div>
+                ) : null}
+
+                <p
+                  className={`break-keep whitespace-pre-line font-black leading-[1.1] tracking-tighter text-black [overflow-wrap:anywhere] ${
+                    isIconRow ? "text-3xl sm:text-5xl md:text-6xl" : "text-2xl sm:text-4xl md:text-5xl lg:text-6xl"
+                  }`}
+                >
                   {message.parts.map((part) => (
-                    <span
-                      key={part.text}
-                      className={
-                        part.accent
-                          ? "bg-gradient-to-r from-[#e10b04] via-[#ff4a24] to-[#4b1398] bg-clip-text font-black text-transparent"
-                          : undefined
-                      }
-                    >
-                      {part.text}
+                    <span key={part.text} className="relative inline-block">
+                      <span className={part.accent ? "text-[#EAB308]" : undefined}>
+                        {part.hero ? (
+                          <span className="block text-7xl leading-[0.95] sm:text-[8rem] md:text-[9rem] lg:text-[10rem]">
+                            {part.text}
+                          </span>
+                        ) : (
+                          part.text
+                        )}
+                      </span>
+
+                      {part.underline ? (
+                        <span className="absolute -bottom-1 left-0 h-1 w-full -rotate-2 rounded-full bg-[#EAB308]" />
+                      ) : null}
+
+                      {part.dots ? (
+                        <span className="absolute -top-5 left-1/2 flex -translate-x-1/2 gap-5 text-[#EAB308] sm:-top-7">
+                          <span className="h-2 w-2 rounded-full bg-current" />
+                          <span className="h-2 w-2 rounded-full bg-current" />
+                          <span className="h-2 w-2 rounded-full bg-current" />
+                        </span>
+                      ) : null}
+
+                      {part.breakAfter ? <br /> : null}
                     </span>
                   ))}
-                </span>
-              </p>
-            ))}
-          </div>
-        </div>
+                </p>
+              </div>
+
+              {index < pinnedMessages.length - 1 ? (
+                <div
+                  className={`mx-auto my-8 w-full border-t border-[#D8D2C8] transition-all duration-300 sm:my-10 ${
+                    isInView ? "opacity-100" : "opacity-0"
+                  }`}
+                  style={{ transitionDelay: `${index * 150 + 120}ms` }}
+                />
+              ) : null}
+            </div>
+          );
+        })}
       </div>
     </section>
   );
