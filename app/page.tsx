@@ -5,7 +5,6 @@ import { ConversionSolutionSections } from "./_components/ConversionSolutionSect
 import { RevenueProcessSection } from "./_components/RevenueProcessSection";
 import { VisitEffectSection } from "./_components/VisitEffectSection";
 import { PingpongEffectSection } from "./_components/PingpongEffectSection";
-import { SuccessProofSection } from "./_components/SuccessProofSection";
 import { BottomConversionSections } from "./_components/BottomConversionSections";
 import { RefundPricingSection } from "./_components/RefundPricingSection";
 import { FinalContactSection } from "./_components/FinalContactSection";
@@ -20,7 +19,6 @@ export default function LandingPage() {
       <RevenueProcessSection />
       <VisitEffectSection />
       <PingpongEffectSection />
-      <SuccessProofSection />
       <BottomConversionSections />
       <RefundPricingSection />
       <FinalContactSection />

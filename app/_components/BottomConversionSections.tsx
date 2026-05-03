@@ -168,27 +168,7 @@ export function BottomConversionSections() {
   return (
     <section className="bg-[#f8f8f8] px-4 pb-20 pt-12 text-center sm:px-6 lg:px-8">
       <div className="mx-auto w-full max-w-[864px]">
-        <div className="break-keep text-[2.2rem] font-black leading-[1.22] tracking-tight text-black sm:text-[3rem] lg:text-[3.45rem]">
-          <p>언제까지 순위 상승도 없는</p>
-          <p className="mt-4 flex items-center justify-center gap-4 text-[#d20a0a]">
-            <img src="/bottom-conversion/siren.jpg" alt="" className="h-[5rem] w-[5rem] object-contain" />
-            값비싼 광고에 돈과 시간을
-          </p>
-          <p>버리시겠습니까?</p>
-        </div>
-
-        <img src="/bottom-conversion/pain-visual.jpg" alt="" className="mx-auto mt-1 h-auto w-full max-w-[641px]" />
-
-        <div className="mt-4 break-keep text-center text-[0.98rem] font-medium leading-[1.8] tracking-tight text-black sm:text-[1.12rem]">
-          <p>마케팅은 하고 싶은데 비용이 부담되고 시간이 없어 망설이셨다면,</p>
-          <p className="font-black text-[#e00000]">지금이 바로 적은 비용으로 확실한 전환을 만들 때입니다.</p>
-          <p>
-            지금 시작하지 않으면, 내 매장의{" "}
-            <span className="font-black text-[#e00000]">고객을 경쟁사에 계속 빼앗기게 됩니다.</span>
-          </p>
-        </div>
-
-        <div className="mt-20 break-keep text-[2.05rem] font-black leading-[1.35] tracking-tight text-black sm:text-[2.8rem]">
+        <div className="break-keep text-[2.05rem] font-black leading-[1.35] tracking-tight text-black sm:text-[2.8rem]">
           <p>
             손님 모아드리는 <span className="text-[#0b72f0]">애드그릿</span>을
           </p>
