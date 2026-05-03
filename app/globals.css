@@ -433,11 +433,17 @@ select {
 }
 
 .process-card {
-  min-height: 575px;
+  display: flex;
+  min-height: 500px;
+  height: 100%;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   border: 1px solid #e6e6e6;
   border-radius: 22px;
   background: #fff;
-  padding: 28px 22px 24px;
+  padding: 32px 22px;
   box-shadow: 0 7px 18px rgba(0, 0, 0, 0.08);
 }
 
@@ -453,9 +459,76 @@ select {
   box-shadow: 0 7px 15px rgba(75, 19, 152, 0.2);
 }
 
+@keyframes visit-float-slow {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-2deg);
+  }
+
+  50% {
+    transform: translateY(-14px) rotate(3deg);
+  }
+}
+
+@keyframes visit-float-medium {
+  0%,
+  100% {
+    transform: translateY(0) rotate(3deg);
+  }
+
+  50% {
+    transform: translateY(12px) rotate(-4deg);
+  }
+}
+
+@keyframes visit-float-fast {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-6deg);
+  }
+
+  50% {
+    transform: translateY(-10px) rotate(7deg);
+  }
+}
+
+.visit-float-slow {
+  animation: visit-float-slow 5.4s ease-in-out infinite;
+}
+
+.visit-float-medium {
+  animation: visit-float-medium 4.6s ease-in-out infinite;
+}
+
+.visit-float-fast {
+  animation: visit-float-fast 3.8s ease-in-out infinite;
+}
+
+.pingpong-highlight-loop {
+  transform-origin: 50% 80%;
+  animation: pingpong-highlight-loop 0.92s cubic-bezier(0.2, 0.9, 0.25, 1.2) infinite;
+}
+
+@keyframes pingpong-highlight-loop {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    text-shadow: 0 0 0 rgba(0, 89, 46, 0);
+  }
+
+  35% {
+    transform: translateY(-0.18em) scale(1.08);
+    text-shadow: 0 0.12em 0.34em rgba(0, 89, 46, 0.22);
+  }
+
+  62% {
+    transform: translateY(0.04em) scale(0.98);
+  }
+}
+
 @media (max-width: 1023px) {
   .process-card {
-    min-height: auto;
+    min-height: 430px;
     padding: 26px 20px 28px;
   }
 
