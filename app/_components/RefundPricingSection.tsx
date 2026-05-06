@@ -28,29 +28,31 @@ const pricingPlans = [
 function PricingCard({ plan }: { plan: (typeof pricingPlans)[number] }) {
   return (
     <article
-      className={`relative flex h-[700px] w-[335px] shrink-0 flex-col rounded-[1.45rem] border-2 bg-white px-7 pb-6 pt-20 shadow-[0_14px_34px_rgba(0,35,80,0.12)] ${
+      className={`relative box-border flex h-[700px] w-[335px] flex-col overflow-hidden rounded-[1.45rem] border-2 bg-white px-7 pb-6 pt-20 shadow-[0_14px_34px_rgba(0,35,80,0.12)] ${
         plan.featured ? "border-[#0b72f0]" : "border-transparent"
       }`}
     >
       {plan.featured ? (
-        <div className="absolute left-[-2px] right-[-2px] top-[-2px] flex h-14 items-center justify-center rounded-t-[1.35rem] bg-[#0b72f0] text-[1.55rem] font-black text-white">
+        <div className="absolute left-0 right-0 top-0 flex h-14 items-center justify-center bg-[#0b72f0] text-[1.55rem] font-black text-white">
           <img src="/refund-pricing/crown.jpg" alt="" className="mr-3 h-7 w-7 object-contain" />
           BEST
         </div>
       ) : null}
 
-      <img src={plan.icon} alt="" className="mx-auto h-[6.15rem] w-[6.15rem] rounded-full object-cover" />
-      <h3
-        className={`mt-8 break-keep text-[2.35rem] font-black leading-tight tracking-tight ${
-          plan.featured ? "text-[#0b72f0]" : "text-[#071735]"
-        }`}
-      >
-        {plan.title}
-      </h3>
+      <div className="flex h-[190px] shrink-0 flex-col items-center justify-start">
+        <img src={plan.icon} alt="" className="mx-auto h-[6.15rem] w-[6.15rem] rounded-full object-cover" />
+        <h3
+          className={`mt-8 break-keep text-[2.35rem] font-black leading-tight tracking-tight ${
+            plan.featured ? "text-[#0b72f0]" : "text-[#071735]"
+          }`}
+        >
+          {plan.title}
+        </h3>
+      </div>
 
-      <div className="mt-6 h-px w-full bg-[#d9e1ee]" />
+      <div className="h-px w-full shrink-0 bg-[#d9e1ee]" />
 
-      <div className="mb-10 mt-7 space-y-5 text-left">
+      <div className="mt-7 space-y-5 text-left">
         {plan.items.map((item) => (
           <div key={item} className="border-b border-dashed border-[#d9e1ee] pb-4 last:border-b-0">
             <p className="flex items-center gap-4 break-keep text-[1.25rem] font-medium leading-tight text-[#071735]">
@@ -62,15 +64,15 @@ function PricingCard({ plan }: { plan: (typeof pricingPlans)[number] }) {
       </div>
 
       <div
-        className={`mt-auto flex h-[117px] flex-col items-center justify-center rounded-xl px-6 text-center ${
+        className={`mx-auto mt-auto flex h-[130px] w-full shrink-0 flex-col items-center justify-center rounded-xl px-4 text-center ${
           plan.featured ? "bg-[#0b72f0] text-white" : "bg-[#eef4ff] text-[#071735]"
-        } ${plan.price === "120" ? "translate-y-[42px]" : ""}`}
+        }`}
       >
-        <p className="font-black leading-none tracking-tight">
-          <span className="text-[5.45rem]">{plan.price}</span>
-          <span className="ml-1 text-[2rem]">만원</span>
+        <p className="flex items-end justify-center whitespace-nowrap font-black leading-none tracking-tight">
+          <span className="text-[4.9rem]">{plan.price}</span>
+          <span className="mb-[0.45rem] ml-1 text-[1.8rem] leading-none">만원</span>
         </p>
-        <p className="mt-3 text-[1.2rem] font-medium leading-tight">{plan.unit}</p>
+        <p className="mt-2 whitespace-nowrap text-[0.96rem] font-medium leading-tight">{plan.unit}</p>
       </div>
     </article>
   );
@@ -100,7 +102,7 @@ export function RefundPricingSection() {
           </div>
         </div>
 
-        <div className="mx-auto mt-8 flex w-full max-w-[1185px] flex-col items-center justify-center gap-10 lg:flex-row lg:items-stretch lg:gap-10">
+        <div className="mx-auto mt-8 grid w-full max-w-[1185px] grid-cols-1 justify-items-center gap-10 xl:grid-cols-[335px_335px_335px] xl:justify-center">
           {pricingPlans.map((plan) => (
             <PricingCard key={plan.title} plan={plan} />
           ))}

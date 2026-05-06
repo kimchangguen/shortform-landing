@@ -8,11 +8,14 @@ import { PingpongEffectSection } from "./_components/PingpongEffectSection";
 import { BottomConversionSections } from "./_components/BottomConversionSections";
 import { RefundPricingSection } from "./_components/RefundPricingSection";
 import { FinalContactSection } from "./_components/FinalContactSection";
+import { FloatingActionButtons } from "./_components/FloatingActionButtons";
+import { SiteFooter } from "./_components/SiteFooter";
 
 export default function LandingPage() {
   return (
     <main className="min-h-screen overflow-x-hidden bg-[#f7f7f7] font-sans text-gray-950">
       <SiteHeader />
+      <FloatingActionButtons />
       <ShortformHero />
       <MarketingPainSection />
       <ConversionSolutionSections />
@@ -22,6 +25,7 @@ export default function LandingPage() {
       <BottomConversionSections />
       <RefundPricingSection />
       <FinalContactSection />
+      <SiteFooter />
     </main>
   );
 }
