@@ -16,8 +16,8 @@ export function SiteHeader() {
             height={187}
             priority
             unoptimized
-            sizes="(max-width: 640px) 210px, (max-width: 1024px) 240px, 260px"
-            className="adgrit-header-logo-image h-auto w-[min(56vw,210px)] object-contain sm:w-60 lg:w-[260px]"
+            sizes="(max-width: 640px) 147px, (max-width: 1024px) 168px, 182px"
+            className="adgrit-header-logo-image h-auto w-[min(39vw,147px)] object-contain sm:w-[168px] lg:w-[182px]"
           />
         </a>
       </div>
