@@ -36,7 +36,7 @@ const pinnedMessages: PinnedMessage[] = [
   {
     id: "not-your-fault",
     parts: [
-      { text: "사장님 " },
+      { text: "사장님\u00A0" },
       { text: "잘못", accent: true, underline: true },
       { text: "이 아니에요" },
     ],
@@ -44,7 +44,7 @@ const pinnedMessages: PinnedMessage[] = [
   {
     id: "world-changed",
     parts: [
-      { text: "세상이 바뀌어서 " },
+      { text: "세상이 바뀌어서\u00A0" },
       { text: "그래요", dots: true },
     ],
   },
@@ -52,18 +52,18 @@ const pinnedMessages: PinnedMessage[] = [
     id: "make-food",
     icon: "chef",
     parts: [
-      { text: "사장님은", breakAfter: true },
+      { text: "사장님은\u00A0" },
       { text: "음식만", accent: true },
-      { text: " 만드세요" },
+      { text: "\u00A0만드세요" },
     ],
   },
   {
     id: "we-bring",
     icon: "people",
     parts: [
-      { text: "손님은", breakAfter: true },
+      { text: "손님은\u00A0" },
       { text: "저희가", accent: true, underline: true },
-      { text: " 모읍니다." },
+      { text: "\u00A0모읍니다." },
     ],
   },
 ];
