@@ -440,118 +440,35 @@ function ReelsModal({ item, onClose }: { item: ShortformVideo; onClose: () => vo
   );
 }
 
-function PhoneFanCarousel() {
-  const [firstVideoIndex, setFirstVideoIndex] = useState(0);
-  const [direction, setDirection] = useState(1);
-  const [selectedVideo, setSelectedVideo] = useState<ShortformVideo | null>(null);
-  const startXRef = useRef<number | null>(null);
-  const hasDraggedRef = useRef(false);
-
-  const moveBy = useCallback((delta: number) => {
-    setDirection(delta > 0 ? 1 : -1);
-    setFirstVideoIndex((current) => wrapIndex(current - delta, shortformVideos.length));
-  }, []);
-
-  useEffect(() => {
-    if (selectedVideo) {
-      return;
-    }
-
-    const timer = window.setInterval(() => moveBy(1), 4000);
-    return () => window.clearInterval(timer);
-  }, [moveBy, selectedVideo]);
-
-  const visibleItems = useMemo(
-    () =>
-      phoneSlots.map((slot) => ({
-        slot,
-        item: shortformVideos[wrapIndex(firstVideoIndex + slot.slot, shortformVideos.length)],
-      })),
-    [firstVideoIndex],
-  );
-
-  const handlePointerDown = (event: PointerEvent<HTMLDivElement>) => {
-    startXRef.current = event.clientX;
-    event.currentTarget.setPointerCapture(event.pointerId);
-  };
-
-  const handlePointerUp = (event: PointerEvent<HTMLDivElement>) => {
-    if (startXRef.current === null) {
-      return;
-    }
-
-    const distance = event.clientX - startXRef.current;
-    startXRef.current = null;
-
-    if (Math.abs(distance) < 36) {
-      return;
-    }
-
-    moveBy(distance > 0 ? 1 : -1);
-  };
-
-  const dotCount = 5;
-  const pageSize = Math.ceil(shortformVideos.length / dotCount);
-  const activeDot = Math.min(dotCount - 1, Math.floor(wrapIndex(firstVideoIndex, shortformVideos.length) / pageSize));
+function PortfolioMarquee() {
+  const displayVideos = shortformVideos.slice(0, 12);
+  const marqueeVideos = [...displayVideos, ...displayVideos];
 
   return (
-    <div className="relative z-10 w-full">
-      <div
-        className="shortform-phone-fan"
-        onPointerDown={handlePointerDown}
-        onPointerUp={handlePointerUp}
-        onPointerCancel={() => {
-          startXRef.current = null;
-        }}
-      >
-        <button
-          type="button"
-          aria-label="이전 숏폼 보기"
-          className="shortform-carousel-arrow left-0 sm:left-3"
-          onClick={() => moveBy(-1)}
-        >
-          <ChevronLeft className="h-11 w-11 sm:h-14 sm:w-14" strokeWidth={4.2} />
-        </button>
-
-        {visibleItems.map(({ slot, item }) => (
-          <PhoneCard
-            key={item.id}
-            item={item}
-            slot={slot}
-            direction={direction}
-            isPaused={Boolean(selectedVideo)}
-            onSelect={setSelectedVideo}
-          />
-        ))}
-
-        <button
-          type="button"
-          aria-label="다음 숏폼 보기"
-          className="shortform-carousel-arrow right-0 sm:right-3"
-          onClick={() => moveBy(1)}
-        >
-          <ChevronRight className="h-11 w-11 sm:h-14 sm:w-14" strokeWidth={4.2} />
-        </button>
-      </div>
-
-      <div className="mt-2 flex items-center justify-center gap-3 sm:mt-3">
-        {Array.from({ length: dotCount }, (_, index) => (
-          <button
-            key={index}
-            type="button"
-            aria-label={`${index + 1}번째 숏폼 묶음 보기`}
-            className={`h-3 w-3 rounded-full transition-colors ${
-              activeDot === index ? "bg-[#e10b04]" : "bg-[#cfcfcf]"
-            }`}
-            onClick={() => {
-              setDirection(index >= activeDot ? 1 : -1);
-              setFirstVideoIndex(Math.min(index * pageSize, shortformVideos.length - 1));
+    <div className="w-full max-w-[100vw] overflow-hidden py-4">
+      <div className="animate-marquee gap-5 pr-5 sm:gap-7 sm:pr-7">
+        {marqueeVideos.map((item, index) => (
+          <div
+            key={`${item.id}-${index}`}
+            className="group relative shrink-0 overflow-hidden rounded-[20px] bg-black/5 shadow-sm transition-all duration-300 hover:scale-[1.03] sm:rounded-[28px]"
+            style={{
+              width: "clamp(240px, 60vw, 300px)",
+              aspectRatio: "9 / 16",
+              cursor: "pointer",
             }}
-          />
+          >
+            <video
+              src={item.videoSrc}
+              poster={item.poster}
+              className="h-full w-full object-cover"
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
+          </div>
         ))}
       </div>
-
-      {selectedVideo && <ReelsModal item={selectedVideo} onClose={() => setSelectedVideo(null)} />}
     </div>
   );
 }
@@ -714,11 +631,8 @@ export function ShortformHero() {
         </div>
       </section>
 
-      <section className="shortform-hero shortform-slider-section relative isolate mb-0 !h-auto overflow-hidden bg-[#f7f7f7] px-4 pb-0 text-black sm:px-6 lg:px-8">
-        <div className="relative mx-auto mb-0 flex h-auto w-full max-w-[1920px] flex-col items-center justify-center pb-0">
-          <PhoneFanCarousel />
-
-        </div>
+      <section id="portfolio" className="relative isolate mb-0 w-full overflow-hidden bg-white pb-24 pt-20 text-black sm:pb-32 sm:pt-32">
+        <PortfolioMarquee />
       </section>
     </>
   );

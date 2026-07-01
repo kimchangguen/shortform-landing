@@ -79,7 +79,7 @@ function PingpongHeadline() {
 
 export function PingpongEffectSection() {
   return (
-    <section className="bg-[#f9f8f6] px-4 pb-20 pt-12 text-center sm:px-6 sm:pb-24 sm:pt-16 lg:px-8">
+    <section id="pingpong" className="bg-[#f9f8f6] px-4 pb-20 pt-12 text-center sm:px-6 sm:pb-24 sm:pt-16 lg:px-8">
       <div className="mx-auto w-full max-w-[1024px]">
         <PingpongHeadline />
 

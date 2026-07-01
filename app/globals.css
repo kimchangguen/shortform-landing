@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -541,4 +543,19 @@ select {
     margin-inline: auto;
     transform: rotate(90deg);
   }
+}
+
+@keyframes marquee-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 40s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
 }
