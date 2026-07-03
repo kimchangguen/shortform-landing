@@ -218,7 +218,7 @@ function ReasonsHeading() {
 export function BottomConversionSections() {
   return (
     <>
-      <section id="bomb-sales" className="bg-[#f9f8f6] px-4 py-[150px] text-center sm:px-6 sm:py-[170px] lg:px-8">
+      <section className="bg-[#f9f8f6] px-4 py-[150px] text-center sm:px-6 sm:py-[170px] lg:px-8">
         <div className="mx-auto w-[43%] min-w-[320px] max-w-[468px] bg-[#f9f8f6]">
           <img
             src="/09-02-transparent.png"

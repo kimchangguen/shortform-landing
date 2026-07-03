@@ -122,7 +122,7 @@ export function SiteHeader() {
           <nav
             className="hidden items-center gap-2 lg:flex"
             aria-label="메인 메뉴"
-            style={{ marginRight: 80, fontFamily: "'Jua', sans-serif" }}
+            style={{ marginRight: 80, fontFamily: "'Pretendard', sans-serif" }}
           >
             {NAV_ITEMS.map((item) => (
               <a
@@ -134,7 +134,7 @@ export function SiteHeader() {
                   fontSize: "15.5px",
                   letterSpacing: "0.08em",
                   color: activeSection === item.href ? "#0F3A2E" : "#444",
-                  fontWeight: activeSection === item.href ? 800 : 700,
+                  fontWeight: activeSection === item.href ? 600 : 400,
                 }}
               >
                 {item.label}
@@ -156,7 +156,7 @@ export function SiteHeader() {
                 padding: "12px 26px",
                 borderRadius: 999,
                 fontSize: "15px",
-                fontWeight: 700,
+                fontWeight: 500,
                 letterSpacing: "0.02em",
               }}
             >
@@ -249,7 +249,7 @@ export function SiteHeader() {
         </div>
 
         {/* Nav links */}
-        <div className="flex flex-1 flex-col gap-1 px-5 pt-2" style={{ fontFamily: "'Jua', sans-serif" }}>
+        <div className="flex flex-1 flex-col gap-1 px-5 pt-2" style={{ fontFamily: "'Pretendard', sans-serif" }}>
           {NAV_ITEMS.map((item, i) => (
             <a
               key={item.href}
@@ -259,7 +259,7 @@ export function SiteHeader() {
               style={{
                 fontSize: "16px",
                 color: activeSection === item.href ? "#0F3A2E" : "#333",
-                fontWeight: activeSection === item.href ? 800 : 700,
+                fontWeight: activeSection === item.href ? 600 : 400,
                 letterSpacing: "0.04em",
                 animationDelay: `${i * 40}ms`,
               }}
@@ -273,8 +273,8 @@ export function SiteHeader() {
         <div className="px-5 pb-8">
           <a
             href="tel:01066632336"
-            className="flex w-full items-center justify-center gap-2 rounded-full bg-[#0F3A2E] py-4 text-[15px] font-bold text-white transition-all duration-300 hover:bg-[#1a5a47] active:scale-[0.97]"
-            style={{ borderRadius: 999, letterSpacing: "0.02em", fontFamily: "'Jua', sans-serif" }}
+            className="flex w-full items-center justify-center gap-2 rounded-full bg-[#0F3A2E] py-4 text-[15px] font-medium text-white transition-all duration-300 hover:bg-[#1a5a47] active:scale-[0.97]"
+            style={{ borderRadius: 999, letterSpacing: "0.02em", fontFamily: "'Pretendard', sans-serif" }}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" />

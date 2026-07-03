@@ -101,6 +101,7 @@ export function MegaHitPinnedSequence() {
   return (
     <section
       ref={sectionRef}
+      id="bomb-sales"
       className="relative z-10 mb-0 w-full overflow-hidden bg-[#f9f8f6] px-[1rem] py-[6rem] pb-0 text-center sm:px-[1.5rem] sm:py-[7.5rem] sm:pb-0 lg:px-[2rem] lg:py-[9rem] lg:pb-0"
     >
       <style jsx global>{`
