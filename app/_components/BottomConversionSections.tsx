@@ -218,7 +218,7 @@ function ReasonsHeading() {
 export function BottomConversionSections() {
   return (
     <>
-      <section className="bg-[#f9f8f6] px-4 py-[150px] text-center sm:px-6 sm:py-[170px] lg:px-8">
+      <section className="site-section px-4 py-[150px] text-center sm:px-6 sm:py-[170px] lg:px-8">
         <div className="mx-auto w-[43%] min-w-[320px] max-w-[468px] bg-[#f9f8f6]">
           <img
             src="/09-02-transparent.png"
@@ -228,7 +228,7 @@ export function BottomConversionSections() {
         </div>
       </section>
 
-      <section className="bg-[#f9f8f6] px-4 pb-20 pt-0 text-center sm:px-6 lg:px-8">
+      <section className="site-section px-4 pb-20 pt-0 text-center sm:px-6 lg:px-8">
         <div className="mx-auto w-full max-w-[864px]">
           <ReasonsHeading />
 

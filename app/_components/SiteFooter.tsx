@@ -11,7 +11,7 @@ const contactItems = ["T. 010-3316-7663", "T. 010-6663-2336", "T. 010-3300-7088"
 
 export function SiteFooter() {
   return (
-    <footer className="bg-[#f4efe5] px-4 py-16 text-[#111111] sm:px-6 lg:px-8 lg:py-20">
+    <footer className="site-section site-section--soft px-4 py-16 text-[#111111] sm:px-6 lg:px-8 lg:py-20">
       <div className="mx-auto w-full max-w-[1230px]">
         <div className="grid gap-12 lg:grid-cols-[1.25fr_1fr_0.8fr] lg:gap-20">
           <div>

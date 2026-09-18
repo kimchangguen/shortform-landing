@@ -228,7 +228,7 @@ function VisitTypingText() {
 
 export function VisitEffectSection() {
   return (
-    <section className="bg-[#f9f8f6] px-4 pb-[150px] pt-10 text-center sm:px-6 lg:px-8">
+    <section className="site-section px-4 pb-[150px] pt-10 text-center sm:px-6 lg:px-8">
       <div className="mx-auto w-full max-w-[1024px]">
         <InteractivePhoneVideo />
 

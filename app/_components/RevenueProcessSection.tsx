@@ -78,7 +78,7 @@ function ProcessCard({ step }: { step: ProcessStep }) {
 
 export function RevenueProcessSection() {
   return (
-    <section id="production-process" className="bg-[#f8f8f8] px-4 pb-[160px] text-center sm:px-6 sm:pb-[180px] lg:px-8 lg:pb-[200px]">
+    <section id="production-process" className="site-section px-4 pb-[160px] text-center sm:px-6 sm:pb-[180px] lg:px-8 lg:pb-[200px]">
       <div className="mx-auto w-full max-w-[1672px]">
         <MegaHitPinnedSequence />
 

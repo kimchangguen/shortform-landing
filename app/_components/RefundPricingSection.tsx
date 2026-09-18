@@ -80,7 +80,7 @@ function PricingCard({ plan }: { plan: (typeof pricingPlans)[number] }) {
 
 export function RefundPricingSection() {
   return (
-    <section id="pricing" className="bg-[#edf6ff] px-4 pb-16 pt-8 text-center sm:px-6 lg:px-8">
+    <section id="pricing" className="site-section px-4 pb-16 pt-8 text-center sm:px-6 lg:px-8">
       <div className="mx-auto w-full max-w-[1315px]">
         <div className="rounded-[1.7rem] bg-white px-5 pb-10 pt-7 shadow-[0_12px_35px_rgba(30,90,160,0.08)]">
           <div className="relative mx-auto h-[8.5rem] max-w-[64rem]">

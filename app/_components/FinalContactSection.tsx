@@ -1,7 +1,7 @@
 export function FinalContactSection() {
   return (
     <>
-      <section className="bg-[#f9f8f6] px-4 pb-0 pt-[150px] text-center sm:px-6 lg:px-8">
+      <section className="site-section px-4 pb-0 pt-[150px] text-center sm:px-6 lg:px-8">
         <div className="mx-auto flex w-full max-w-[1100px] flex-col items-center justify-center gap-10 lg:flex-row lg:gap-14">
           <div className="w-full max-w-[390px] bg-[#f9f8f6] sm:max-w-[470px] lg:w-[48%] lg:max-w-[560px]">
             <img
@@ -21,7 +21,7 @@ export function FinalContactSection() {
         </div>
       </section>
 
-      <section id="consultation" className="bg-[#f9f8f6] px-4 pb-20 pt-[50px] text-center sm:px-6 lg:px-8">
+      <section id="consultation" className="site-section px-4 pb-20 pt-[50px] text-center sm:px-6 lg:px-8">
         <div className="mx-auto w-[950px] max-w-full">
           <img
             src="/19.png"

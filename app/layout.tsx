@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { SiteBackground } from "./_components/SiteBackground";
 import Script from "next/script";
 
 export const metadata: Metadata = {
@@ -39,7 +40,8 @@ export default function RootLayout({
         {/* 2. 네이버 프리미엄 로그분석 (나중에 메일로 코드가 오면 이 아래에 추가하면 됩니다) */}
       </head>
       <body>
-        {children}
+        <SiteBackground />
+        <div className="site-content">{children}</div>
       </body>
     </html>
   );
