@@ -1,7 +1,5 @@
 import { SiteHeader } from "./_components/SiteHeader";
 import { ShortformHero } from "./_components/ShortformHero";
-import { MarketingPainSection } from "./_components/MarketingPainSection";
-import { ConversionSolutionSections } from "./_components/ConversionSolutionSections";
 import { RevenueProcessSection } from "./_components/RevenueProcessSection";
 import { VisitEffectSection } from "./_components/VisitEffectSection";
 import { PingpongEffectSection } from "./_components/PingpongEffectSection";
@@ -17,8 +15,6 @@ export default function LandingPage() {
       <SiteHeader />
       <FloatingActionButtons />
       <ShortformHero />
-      <MarketingPainSection />
-      <ConversionSolutionSections />
       <RevenueProcessSection />
       <VisitEffectSection />
       <PingpongEffectSection />
