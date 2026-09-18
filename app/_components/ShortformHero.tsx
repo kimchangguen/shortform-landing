@@ -1,90 +1,5 @@
-type ShortformVideo = {
-  id: number;
-  poster: string;
-  videoSrc?: string;
-  headline: string;
-  subline: string;
-  handle: string;
-  caption: string;
-  likes: string;
-  comments: string;
-  shares: string;
-};
-
-const baseVideos: Omit<ShortformVideo, "id">[] = [
-  {
-    poster: "/hero-media/media-1.jpg",
-    headline: "갓 튀긴 바삭함!",
-    subline: "이 집 치킨 미쳤다!",
-    handle: "@food_lover",
-    caption: "치즈마니아를 모아라",
-    likes: "7.4만",
-    comments: "5.9천",
-    shares: "3.8천",
-  },
-  {
-    poster: "/hero-media/media-2.jpg",
-    headline: "치즈 폭포 비주얼",
-    subline: "반칙이야...",
-    handle: "@eat_now",
-    caption: "오늘은 여기가 답",
-    likes: "6.4만",
-    comments: "4.8천",
-    shares: "2.9천",
-  },
-  {
-    poster: "/hero-media/media-3.jpg",
-    headline: "오늘 저녁은 이거다!",
-    subline: "#얼큰 #국물 #소주각",
-    handle: "@mukbang_k",
-    caption: "현지인픽 떡볶이",
-    likes: "8.7만",
-    comments: "6.2천",
-    shares: "4.1천",
-  },
-  {
-    poster: "/hero-media/media-4.jpg",
-    headline: "꾸덕한 크림 파스타",
-    subline: "완벽해...!",
-    handle: "@pasta_queen",
-    caption: "버거타운 인증 숏",
-    likes: "7.3만",
-    comments: "5.1천",
-    shares: "3.7천",
-  },
-  {
-    poster: "/hero-media/media-5.jpg",
-    headline: "수제버거 끝판왕!",
-    subline: "육즙 가득",
-    handle: "@burger_holic",
-    caption: "버거다운 한입",
-    likes: "6.9만",
-    comments: "4.2천",
-    shares: "3.1천",
-  },
-  {
-    poster: "/hero-media/media-6.jpg",
-    headline: "카페 분위기 미쳤다",
-    subline: "커피도 미쳤다!",
-    handle: "@coffee_ins",
-    caption: "밀크티의 진심",
-    likes: "8.3만",
-    comments: "2.1만",
-    shares: "7.4천",
-  },
-];
-
-const shortformVideos: ShortformVideo[] = Array.from({ length: 60 }, (_, index) => {
-  const source = baseVideos[index % baseVideos.length];
-  const round = Math.floor(index / baseVideos.length);
-
-  return {
-    ...source,
-    id: index + 1,
-    videoSrc: `/videos/shorts/a%20(${index + 1}).mp4`,
-    handle: round === 0 ? source.handle : `${source.handle}_${round + 1}`,
-  };
-});
+import { PortfolioMarquee } from "./PortfolioMarquee";
+import shortformVideos from "../_data/shortform-videos.json";
 
 const CONSULTATION_HREF = "#consultation";
 const PORTFOLIO_HREF = "#portfolio";
@@ -260,39 +175,6 @@ function HeroBackgroundDecoration() {
   );
 }
 
-function PortfolioMarquee() {
-  const displayVideos = shortformVideos.slice(0, 12);
-  const marqueeVideos = [...displayVideos, ...displayVideos];
-
-  return (
-    <div className="w-full max-w-[100vw] overflow-hidden py-4">
-      <div className="animate-marquee gap-5 pr-5 sm:gap-7 sm:pr-7">
-        {marqueeVideos.map((item, index) => (
-          <div
-            key={`${item.id}-${index}`}
-            className="group relative shrink-0 overflow-hidden rounded-[20px] bg-black/5 shadow-sm transition-all duration-300 hover:scale-[1.03] sm:rounded-[28px]"
-            style={{
-              width: "clamp(240px, 60vw, 300px)",
-              aspectRatio: "9 / 16",
-              cursor: "pointer",
-            }}
-          >
-            <video
-              src={item.videoSrc}
-              poster={item.poster}
-              className="h-full w-full object-cover"
-              autoPlay
-              muted
-              loop
-              playsInline
-            />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 export function ShortformHero() {
   return (
     <>
@@ -353,7 +235,7 @@ export function ShortformHero() {
       </section>
 
       <section id="portfolio" className="relative isolate mb-0 w-full overflow-hidden bg-white pb-24 pt-20 text-black sm:pb-32 sm:pt-32">
-        <PortfolioMarquee />
+        <PortfolioMarquee videos={shortformVideos} />
       </section>
     </>
   );
