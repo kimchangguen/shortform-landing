@@ -31,7 +31,18 @@ type TextPart = {
   className?: string;
 };
 
-type TypingPhase = 0 | 1 | 2;
+type TypingPhase = 0 | 1 | 2 | 3 | 4 | 5;
+
+type BackdropCard = {
+  src: string;
+  side: "left" | "right";
+  top: string;
+  size: number;
+  rotate: string;
+  opacity: number;
+  blur?: boolean;
+  delay: number;
+};
 
 const baseVideos: Omit<ShortformVideo, "id">[] = [
   {
@@ -131,6 +142,85 @@ const typingThirdParts: TextPart[] = [
 const typingFirstParts: TextPart[] = [{ text: "요즘 맛집은 광고 안 합니다." }];
 
 const typingMessages: [TextPart[], TextPart[], TextPart[]] = [typingFirstParts, typingSecondParts, typingThirdParts];
+
+const CONSULTATION_HREF = "#consultation";
+
+const backdropCards: BackdropCard[] = [
+  { src: "/hero-media/media-1.jpg", side: "left", top: "15%", size: 108, rotate: "-7deg", opacity: 0.4, blur: true, delay: 0 },
+  { src: "/hero-media/media-2.jpg", side: "left", top: "48%", size: 136, rotate: "5deg", opacity: 0.72, delay: 1.4 },
+  { src: "/hero-media/media-3.jpg", side: "left", top: "80%", size: 100, rotate: "-4deg", opacity: 0.36, blur: true, delay: 2.6 },
+  { src: "/hero-media/media-4.jpg", side: "right", top: "17%", size: 112, rotate: "6deg", opacity: 0.4, blur: true, delay: 0.8 },
+  { src: "/hero-media/media-5.jpg", side: "right", top: "50%", size: 138, rotate: "-5deg", opacity: 0.72, delay: 2 },
+  { src: "/hero-media/media-6.jpg", side: "right", top: "80%", size: 102, rotate: "4deg", opacity: 0.38, blur: true, delay: 3.2 },
+];
+
+function HeroNetworkBackdrop() {
+  return (
+    <div aria-hidden className="pointer-events-none absolute inset-0 z-0 hidden overflow-hidden sm:block">
+      {backdropCards.map((card) => (
+        <div
+          key={card.src + card.side}
+          className={`hero-backdrop-card hero-backdrop-card--${card.side}`}
+          style={
+            {
+              "--card-top": card.top,
+              "--card-size": `${card.size}px`,
+              "--card-rotate": card.rotate,
+              "--card-opacity": card.opacity,
+              animationDelay: `${card.delay}s`,
+            } as CSSProperties
+          }
+        >
+          <img
+            src={card.src}
+            alt=""
+            width={card.size}
+            height={Math.round((card.size * 16) / 9)}
+            loading="lazy"
+            decoding="async"
+            className={`h-full w-full object-cover ${card.blur ? "blur-[1.5px]" : ""}`}
+          />
+          <span className="hero-backdrop-play" />
+        </div>
+      ))}
+
+      <div className="hero-backdrop-badge hero-backdrop-badge--ig" />
+      <div className="hero-backdrop-badge hero-backdrop-badge--yt" />
+
+      <div className="hero-network-flow">
+        <span>1 SHOOT</span>
+        <span>20 SHORTS</span>
+        <span>32 CHANNELS</span>
+        <span>2.4M FOLLOWERS</span>
+      </div>
+    </div>
+  );
+}
+
+function HeroNetworkBackdropMobile() {
+  return (
+    <div aria-hidden className="pointer-events-none absolute inset-0 z-0 block overflow-hidden sm:hidden">
+      <img
+        src="/hero-media/media-2.jpg"
+        alt=""
+        width={68}
+        height={121}
+        loading="lazy"
+        decoding="async"
+        className="absolute left-2 top-3 h-[121px] w-[68px] -rotate-6 rounded-xl object-cover opacity-30 shadow-md"
+      />
+      <img
+        src="/hero-media/media-5.jpg"
+        alt=""
+        width={68}
+        height={121}
+        loading="lazy"
+        decoding="async"
+        className="absolute right-2 top-3 h-[121px] w-[68px] rotate-6 rounded-xl object-cover opacity-30 shadow-md"
+      />
+    </div>
+  );
+}
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
@@ -505,7 +595,7 @@ export function ShortformHero() {
   }, []);
 
   const triggerNextSentence = useCallback(() => {
-    if (isHeroReleasedRef.current || isTypingRef.current || currentPhaseRef.current === 2) {
+    if (isHeroReleasedRef.current || isTypingRef.current || currentPhaseRef.current === 5) {
       return;
     }
 
@@ -513,26 +603,37 @@ export function ShortformHero() {
   }, [beginTyping]);
 
   useEffect(() => {
-    const totalLength = partLength(typingMessages[activePhase]);
-    const intervalId = window.setInterval(() => {
-      setTypedCount((currentCount) => {
-        const nextCount = Math.min(currentCount + 1, totalLength);
+    if (activePhase <= 2) {
+      const totalLength = partLength(typingMessages[activePhase as 0 | 1 | 2]);
+      const intervalId = window.setInterval(() => {
+        setTypedCount((currentCount) => {
+          const nextCount = Math.min(currentCount + 1, totalLength);
 
-        if (nextCount === totalLength) {
-          window.clearInterval(intervalId);
-          isTypingRef.current = false;
-
-          if (activePhase === 2) {
-            isHeroReleasedRef.current = true;
+          if (nextCount === totalLength) {
+            window.clearInterval(intervalId);
+            isTypingRef.current = false;
           }
-        }
 
-        return nextCount;
-      });
-    }, activePhase === 2 ? 38 : 30);
+          return nextCount;
+        });
+      }, activePhase === 2 ? 38 : 30);
+
+      return () => {
+        window.clearInterval(intervalId);
+      };
+    }
+
+    const revealDelay = activePhase === 5 ? 900 : 750;
+    const timeoutId = window.setTimeout(() => {
+      isTypingRef.current = false;
+
+      if (activePhase === 5) {
+        isHeroReleasedRef.current = true;
+      }
+    }, revealDelay);
 
     return () => {
-      window.clearInterval(intervalId);
+      window.clearTimeout(timeoutId);
     };
   }, [activePhase]);
 
@@ -592,14 +693,20 @@ export function ShortformHero() {
   const firstOpacity = activePhase === 0 ? 1 : 0;
   const secondOpacity = activePhase === 1 ? 1 : 0;
   const thirdOpacity = activePhase === 2 ? 1 : 0;
+  const phase3Active = activePhase === 3;
+  const phase4Active = activePhase === 4;
+  const phase5Active = activePhase === 5;
 
   return (
     <>
       <section ref={typingRef} id="top" className="shortform-typing-hero relative mx-auto mt-0 w-full max-w-[1920px] bg-[#f7f7f7] pt-0">
         <div className="shortform-typing-stage sticky top-0 z-10 grid !h-[800px] place-items-center overflow-hidden px-4 pt-0 text-center sm:px-6 lg:px-8">
           <div className="relative flex h-full w-full max-w-[1920px] items-center justify-center">
+            <HeroNetworkBackdrop />
+            <HeroNetworkBackdropMobile />
+
             <div
-              className="absolute inset-x-0 mx-auto w-fit transition-opacity duration-200"
+              className="absolute inset-x-0 z-10 mx-auto w-fit transition-opacity duration-200"
               style={{ opacity: firstOpacity }}
             >
               <div className="relative inline-block">
@@ -611,14 +718,14 @@ export function ShortformHero() {
             </div>
 
             <p
-              className="absolute inset-x-0 mx-auto break-keep text-[2.25rem] font-black leading-tight text-black transition-opacity duration-200 sm:text-[4.65rem] lg:text-[6.35rem]"
+              className="absolute inset-x-0 z-10 mx-auto break-keep text-[2.25rem] font-black leading-tight text-black transition-opacity duration-200 sm:text-[4.65rem] lg:text-[6.35rem]"
               style={{ opacity: secondOpacity }}
             >
               {renderTypedParts(typingSecondParts, activePhase === 1 ? typedCount : partLength(typingSecondParts))}
             </p>
 
             <div
-              className="absolute inset-x-0 mx-auto w-fit break-keep text-center font-black leading-[0.92] text-black transition-opacity duration-200"
+              className="absolute inset-x-0 z-10 mx-auto w-fit break-keep text-center font-black leading-[0.92] text-black transition-opacity duration-200"
               style={{ opacity: thirdOpacity }}
             >
               <DoodleStar />
@@ -626,6 +733,57 @@ export function ShortformHero() {
               <h1 className="text-[4.4rem] sm:text-[7.3rem] lg:text-[9.5rem]">
                 {renderTypedParts(typingThirdParts, activePhase === 2 ? typedCount : partLength(typingThirdParts))}
               </h1>
+            </div>
+
+            <div
+              className="absolute inset-x-0 z-10 mx-auto w-fit break-keep text-center transition-all duration-500 ease-out"
+              style={{
+                opacity: phase3Active ? 1 : 0,
+                transform: phase3Active ? "translateY(0)" : "translateY(18px)",
+              }}
+            >
+              <p className="text-[1.4rem] font-bold text-black/60 sm:text-[2.1rem] lg:text-[2.6rem]">촬영부터</p>
+              <p className="mt-2 break-keep text-[1.85rem] font-black leading-tight text-black sm:text-[3.1rem] lg:text-[4rem]">
+                <span className="text-[#df0900]">32개 계정</span>
+                <span className="mx-2 text-black/35">·</span>
+                <span className="text-[#df0900]">240만 팔로워</span>
+              </p>
+            </div>
+
+            <div
+              className="absolute inset-x-0 z-10 mx-auto w-fit break-keep text-center transition-all duration-500 ease-out"
+              style={{
+                opacity: phase4Active ? 1 : 0,
+                transform: phase4Active ? "translateY(0)" : "translateY(18px)",
+              }}
+            >
+              <p className="text-[1.5rem] font-bold text-black/45 sm:text-[2.5rem] lg:text-[3.2rem]">
+                1,000만원 넘는 견적
+              </p>
+            </div>
+
+            <div
+              className="absolute inset-x-0 z-10 mx-auto flex w-fit flex-col items-center break-keep text-center transition-all duration-500 ease-out"
+              style={{
+                opacity: phase5Active ? 1 : 0,
+                transform: phase5Active ? "translateY(0)" : "translateY(18px)",
+              }}
+            >
+              <p className="text-[2.7rem] font-black leading-[0.95] text-[#df0900] sm:text-[4.8rem] lg:text-[6.6rem]">
+                350만원에 해드려요
+              </p>
+              <a
+                href={CONSULTATION_HREF}
+                className="pointer-events-auto mt-6 inline-flex items-center gap-2 rounded-full bg-[#0F3A2E] px-8 py-3.5 text-[0.95rem] font-semibold text-white shadow-[0_10px_24px_rgba(15,58,46,0.28)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#1a5a47] hover:shadow-[0_14px_30px_rgba(15,58,46,0.32)] sm:text-[1.05rem]"
+                style={{
+                  opacity: phase5Active ? 1 : 0,
+                  transitionDelay: phase5Active ? "400ms" : "0ms",
+                  transitionProperty: "opacity",
+                  transitionDuration: "500ms",
+                }}
+              >
+                지금 바로 견적 받기
+              </a>
             </div>
           </div>
         </div>

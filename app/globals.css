@@ -60,6 +60,133 @@ select {
   top: 0;
 }
 
+.hero-backdrop-card {
+  position: absolute;
+  top: var(--card-top);
+  width: var(--card-size);
+  aspect-ratio: 9 / 16;
+  border-radius: 16px;
+  overflow: hidden;
+  opacity: var(--card-opacity);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
+  transform: rotate(var(--card-rotate));
+  animation: hero-card-float 7s ease-in-out infinite;
+}
+
+.hero-backdrop-card--left {
+  left: 3%;
+}
+
+.hero-backdrop-card--right {
+  right: 3%;
+}
+
+.hero-backdrop-play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  height: 22px;
+  width: 22px;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.85);
+  display: block;
+}
+
+.hero-backdrop-play::after {
+  content: "";
+  position: absolute;
+  left: 56%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-style: solid;
+  border-width: 5px 0 5px 8px;
+  border-color: transparent transparent transparent #111;
+}
+
+.hero-backdrop-badge {
+  position: absolute;
+  height: 14px;
+  width: 14px;
+  border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.hero-backdrop-badge--ig {
+  left: 9%;
+  top: 46%;
+  background: radial-gradient(circle at 30% 30%, #f9ce34, #ee2a7b 55%, #6228d7 100%);
+}
+
+.hero-backdrop-badge--yt {
+  right: 9%;
+  top: 76%;
+  background: #ff0000;
+}
+
+.hero-network-flow {
+  position: absolute;
+  left: 4%;
+  bottom: 8%;
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hero-network-flow span {
+  position: relative;
+  padding-left: 14px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(15, 23, 42, 0.38);
+}
+
+.hero-network-flow span::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  height: 4px;
+  width: 4px;
+  border-radius: 999px;
+  background: rgba(223, 9, 0, 0.55);
+  transform: translateY(-50%);
+}
+
+.hero-network-flow span:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 1.5px;
+  top: 100%;
+  height: 10px;
+  width: 1px;
+  background: rgba(15, 23, 42, 0.15);
+}
+
+@keyframes hero-card-float {
+  0%,
+  100% {
+    transform: rotate(var(--card-rotate)) translateY(0);
+  }
+  50% {
+    transform: rotate(var(--card-rotate)) translateY(-8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-backdrop-card {
+    animation: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-network-flow {
+    display: flex;
+  }
+}
+
 .shortform-slider-section {
   height: 650px;
 }
