@@ -1,6 +1,7 @@
 import { SiteHeader } from "./_components/SiteHeader";
 import { ShortformHero } from "./_components/ShortformHero";
-import { RevenueProcessSection } from "./_components/RevenueProcessSection";
+import { MegaHitPinnedSequence } from "./_components/MegaHitPinnedSequence";
+import { ProcessSection } from "./_components/ProcessSection";
 import { VisitEffectSection } from "./_components/VisitEffectSection";
 import { PingpongEffectSection } from "./_components/PingpongEffectSection";
 import { BottomConversionSections } from "./_components/BottomConversionSections";
@@ -15,7 +16,12 @@ export default function LandingPage() {
       <SiteHeader />
       <FloatingActionButtons />
       <ShortformHero />
-      <RevenueProcessSection />
+      <div className="site-section px-4 text-center sm:px-6 lg:px-8">
+        <div className="mx-auto w-full max-w-[1672px]">
+          <MegaHitPinnedSequence />
+        </div>
+      </div>
+      <ProcessSection />
       <VisitEffectSection />
       <PingpongEffectSection />
       <BottomConversionSections />
