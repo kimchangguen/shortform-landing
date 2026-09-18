@@ -1,7 +1,3 @@
-"use client";
-
-import { useEffect, useRef, useState } from "react";
-
 type ShortformVideo = {
   id: number;
   poster: string;
@@ -92,10 +88,6 @@ const shortformVideos: ShortformVideo[] = Array.from({ length: 60 }, (_, index) 
 
 const CONSULTATION_HREF = "#consultation";
 const PORTFOLIO_HREF = "#portfolio";
-
-function clamp(value: number, min: number, max: number) {
-  return Math.min(Math.max(value, min), max);
-}
 
 function MarkerUnderline() {
   return (
@@ -265,134 +257,60 @@ function PortfolioMarquee() {
 }
 
 export function ShortformHero() {
-  const scrollWrapperRef = useRef<HTMLElement | null>(null);
-  const stepMaskRef = useRef(0);
-  const rafRef = useRef<number | null>(null);
-  const [stepMask, setStepMask] = useState(0);
-  const [jsReady, setJsReady] = useState(false);
-
-  useEffect(() => {
-    setJsReady(true);
-  }, []);
-
-  useEffect(() => {
-    const compute = () => {
-      const el = scrollWrapperRef.current;
-
-      if (!el) {
-        return;
-      }
-
-      const rect = el.getBoundingClientRect();
-      const total = rect.height - window.innerHeight;
-      const progress = total > 0 ? clamp(-rect.top / total, 0, 1) : rect.top <= 0 ? 1 : 0;
-
-      let nextMask = 0;
-
-      if (progress > 0.04) nextMask = 1;
-      if (progress > 0.36) nextMask = 2;
-      if (progress > 0.64) nextMask = 3;
-      if (progress > 0.84) nextMask = 4;
-
-      if (nextMask !== stepMaskRef.current) {
-        stepMaskRef.current = nextMask;
-        setStepMask(nextMask);
-      }
-    };
-
-    let ticking = false;
-
-    const onScroll = () => {
-      if (ticking) {
-        return;
-      }
-
-      ticking = true;
-      rafRef.current = window.requestAnimationFrame(() => {
-        compute();
-        ticking = false;
-      });
-    };
-
-    compute();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
-
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-
-      if (rafRef.current !== null) {
-        window.cancelAnimationFrame(rafRef.current);
-      }
-    };
-  }, []);
-
-  const step1Visible = stepMask >= 1;
-  const step2Visible = stepMask >= 2;
-  const step3Visible = stepMask >= 3;
-  const ctaVisible = stepMask >= 4;
-
   return (
     <>
-      <section ref={scrollWrapperRef} id="top" className="hero-scroll">
-        <div className="hero-sticky">
-          <HeroBackgroundDecoration />
+      <section id="top" className="hero">
+        <HeroBackgroundDecoration />
 
-          <div
-            className={`hero-content mx-auto flex w-full max-w-[1180px] flex-col items-center px-6 text-center sm:px-8 ${
-              jsReady ? "js-enabled" : ""
-            }`}
+        <div className="hero-content mx-auto flex w-full max-w-[1180px] flex-col items-center px-6 text-center sm:px-8">
+          <h1 className="hero-headline break-keep">
+            <span className="hero-reveal hero-headline-line" style={{ animationDelay: "150ms" }}>
+              이제 고객은
+            </span>
+            <span className="hero-reveal hero-headline-accent" style={{ animationDelay: "350ms" }}>
+              검색보다
+              <MarkerUnderline />
+            </span>
+            <span className="hero-reveal hero-headline-line" style={{ animationDelay: "550ms" }}>
+              영상을 봅니다
+            </span>
+          </h1>
+
+          <p
+            className="hero-reveal hero-handwrite-main relative mt-3 inline-block break-keep sm:mt-4"
+            style={{ animationDelay: "850ms" }}
           >
-            <div className={`hero-step ${step1Visible ? "is-visible" : ""}`}>
-              <h1 className="hero-headline break-keep">
-                <span className="hero-step-line" style={{ transitionDelay: "0ms" }}>
-                  이제 고객은
-                </span>
-                <span className="hero-step-line hero-headline-accent" style={{ transitionDelay: "110ms" }}>
-                  검색보다
-                  <MarkerUnderline />
-                </span>
-                <span className="hero-step-line" style={{ transitionDelay: "220ms" }}>
-                  영상을 봅니다
-                </span>
-              </h1>
-            </div>
+            숏폼으로 터집니다
+            <BrushUnderline />
+          </p>
 
-            <div className={`hero-step mt-3 sm:mt-4 ${step2Visible ? "is-visible" : ""}`}>
-              <p className="hero-handwrite-main relative inline-block break-keep">
-                숏폼으로 터집니다
-                <BrushUnderline />
-              </p>
-            </div>
-
-            <div className={`hero-step mt-7 flex flex-col gap-1.5 sm:mt-9 ${step3Visible ? "is-visible" : ""}`}>
-              <p className="hero-price-line">
-                촬영부터 <span className="hero-number">32개 계정</span>,{" "}
-                <span className="hero-number">240만 팔로워</span>
-              </p>
-              <p className="hero-price-line">
-                1,000만원 넘는 서비스를{" "}
+          <div className="mt-7 flex w-full flex-col gap-1.5 sm:mt-9">
+            <p className="hero-reveal hero-price-line" style={{ animationDelay: "1150ms" }}>
+              촬영부터 <span className="hero-number">32개</span> 계정,{" "}
+              <span className="hero-number">240만</span> 팔로워
+            </p>
+            <p className="hero-reveal hero-price-line" style={{ animationDelay: "1450ms" }}>
+              1,000만원 넘는 서비스를{" "}
+              <span className="inline-block">
                 <span className="hero-number-price">
                   350만원
                   <PriceMarker />
                 </span>
                 에 해드려요
-              </p>
-            </div>
+              </span>
+            </p>
+          </div>
 
-            <div
-              className={`hero-step hero-cta-group mt-8 flex w-full flex-col items-center gap-3 sm:mt-10 sm:w-auto sm:flex-row sm:gap-4 ${
-                ctaVisible ? "is-visible" : ""
-              }`}
-            >
-              <a href={CONSULTATION_HREF} className="hero-cta-primary w-full text-center sm:w-auto">
-                지금 바로 상담하기
-              </a>
-              <a href={PORTFOLIO_HREF} className="hero-cta-secondary w-full text-center sm:w-auto">
-                포트폴리오 보기
-              </a>
-            </div>
+          <div
+            className="hero-reveal hero-cta-group mt-8 flex w-full flex-col items-center gap-3 sm:mt-10 sm:w-auto sm:flex-row sm:gap-4"
+            style={{ animationDelay: "1750ms" }}
+          >
+            <a href={CONSULTATION_HREF} className="hero-cta-primary w-full text-center sm:w-auto">
+              지금 바로 상담하기
+            </a>
+            <a href={PORTFOLIO_HREF} className="hero-cta-secondary w-full text-center sm:w-auto">
+              포트폴리오 보기
+            </a>
           </div>
         </div>
       </section>
