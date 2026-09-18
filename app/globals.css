@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Nanum+Pen+Script&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Nanum+Pen+Script&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -47,202 +47,345 @@ select {
   align-items: center;
   justify-content: center;
   background:
-    radial-gradient(circle at 14% 18%, rgba(191, 224, 255, 0.5), transparent 42%),
-    radial-gradient(circle at 88% 12%, rgba(230, 222, 255, 0.45), transparent 40%),
-    radial-gradient(circle at 90% 82%, rgba(198, 217, 255, 0.4), transparent 42%),
-    radial-gradient(circle at 8% 86%, rgba(233, 217, 255, 0.4), transparent 42%),
-    linear-gradient(180deg, #ffffff 0%, #fafbff 50%, #ffffff 100%);
+    radial-gradient(ellipse at 0% 9%, #edf5ff 0%, transparent 33%),
+    radial-gradient(ellipse at 100% 94%, #f0f6ff 0%, transparent 30%),
+    #fff;
 }
 
+/* Static edge artwork leaves the central copy on an open, white canvas. */
 .hero-bg {
   position: absolute;
   inset: 0;
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
+  user-select: none;
 }
 
-.hero-blob {
+.hero-background-artwork {
   position: absolute;
-  filter: blur(38px);
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  mask-image: linear-gradient(90deg, #000 22%, transparent 37%, transparent 63%, #000 78%);
 }
 
-.hero-blob--1 {
-  left: -6%;
-  top: -8%;
-  width: 300px;
-  height: 260px;
-  background: radial-gradient(circle at 35% 35%, #bfe0ff, transparent 70%);
-  border-radius: 55% 45% 60% 40% / 50% 55% 45% 50%;
-  opacity: 0.22;
-}
-
-.hero-blob--2 {
-  left: 2%;
-  top: 38%;
-  width: 260px;
-  height: 230px;
-  background: radial-gradient(circle at 40% 40%, #d9cfff, transparent 70%);
-  border-radius: 40% 60% 55% 45% / 55% 45% 60% 40%;
-  opacity: 0.18;
-}
-
-.hero-blob--3 {
-  left: -8%;
-  bottom: -10%;
-  width: 380px;
-  height: 320px;
-  background: radial-gradient(circle at 45% 45%, #e3d9ff, transparent 72%);
-  border-radius: 50% 50% 40% 60% / 45% 55% 50% 50%;
-  opacity: 0.16;
-}
-
-.hero-blob--4 {
-  right: -6%;
-  top: -6%;
-  width: 280px;
-  height: 240px;
-  background: radial-gradient(circle at 55% 40%, #e6deff, transparent 70%);
-  border-radius: 45% 55% 50% 50% / 55% 45% 55% 45%;
-  opacity: 0.18;
-}
-
-.hero-blob--5 {
-  right: -10%;
-  top: 34%;
-  width: 400px;
-  height: 340px;
-  background: radial-gradient(circle at 45% 45%, #c6d9ff, transparent 72%);
-  border-radius: 55% 45% 45% 55% / 50% 50% 55% 45%;
-  opacity: 0.18;
-}
-
-.hero-blob--6 {
-  right: 4%;
-  bottom: -8%;
-  width: 230px;
-  height: 200px;
-  background: radial-gradient(circle at 40% 40%, #cfe2ff, transparent 70%);
-  border-radius: 50% 50% 55% 45% / 45% 55% 50% 50%;
-  opacity: 0.16;
-}
-
-.hero-blob--7 {
-  left: 50%;
-  bottom: -16%;
-  width: 480px;
-  height: 220px;
-  transform: translateX(-50%);
-  background: radial-gradient(ellipse at 50% 50%, #e9e2ff, transparent 74%);
+.hero-orb {
+  position: absolute;
+  z-index: 1;
   border-radius: 50%;
-  opacity: 0.12;
+  background: radial-gradient(circle at 75% 28%, #acd8ff, #dce6ff 60%, #f3f7ff 100%);
+}
+
+.hero-orb--1 {
+  left: 19%;
+  top: 11%;
+  width: clamp(90px, 10.6vw, 178px);
+  aspect-ratio: 1;
+  opacity: 0.62;
+  mask-image: linear-gradient(125deg, transparent 5%, #000 65%);
+  transform: rotate(-12deg);
+  border-radius: 48% 52% 55% 45%;
+}
+
+.hero-orb--2 {
+  left: 19%;
+  bottom: 10%;
+  width: clamp(64px, 7vw, 118px);
+  aspect-ratio: 1;
+  background: radial-gradient(circle at 65% 70%, #c5dbff, #dcdffe 55%, #f6f7ff);
+  opacity: 0.66;
+  mask-image: linear-gradient(145deg, transparent, #000 60%);
+}
+
+.hero-orb--3 {
+  right: 24%;
+  top: 7%;
+  width: clamp(70px, 8vw, 135px);
+  aspect-ratio: 1.8;
+  transform: rotate(-42deg);
+  background: radial-gradient(ellipse at 40% 60%, #bdceff, #e6edff 65%, #fff);
+  opacity: 0.5;
+  mask-image: linear-gradient(140deg, #000 20%, transparent);
+}
+
+.hero-orb--4 {
+  right: -5%;
+  top: 39%;
+  width: 18vw;
+  aspect-ratio: 1;
+  background: #d6eaff;
+  opacity: 0.45;
+  filter: blur(42px);
 }
 
 .hero-dot-pattern {
   position: absolute;
-  width: 96px;
-  height: 96px;
-  background-image: radial-gradient(circle, rgba(124, 164, 255, 0.4) 1.4px, transparent 1.4px);
-  background-size: 16px 16px;
-  opacity: 0.5;
+  z-index: 2;
+  width: 90px;
+  height: 90px;
+  background-image: radial-gradient(circle, #80a7ff 1.4px, transparent 1.7px);
+  background-size: 18px 18px;
+  opacity: 0.64;
 }
 
 .hero-dot-pattern--1 {
-  left: 6%;
-  top: 46%;
+  left: 19.5%;
+  top: 35%;
 }
 
 .hero-dot-pattern--2 {
-  right: 7%;
-  top: 20%;
-}
-
-.hero-dot-pattern--3 {
-  left: 9%;
-  bottom: 14%;
-}
-
-.hero-dot-pattern--4 {
-  right: 10%;
-  bottom: 30%;
+  right: 15%;
+  top: 63%;
 }
 
 .hero-play-decoration {
   position: absolute;
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.65);
-  border: 1px solid rgba(124, 164, 255, 0.35);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0.2;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: clamp(64px, 7.6vw, 126px);
+  aspect-ratio: 1.08;
+  border-radius: 19%;
+  background:
+    radial-gradient(circle at 20% 85%, #d5eaff, transparent 60%),
+    linear-gradient(125deg, #c1d8ff, #d8cbfa 56%, #f4d8fa);
+  opacity: 0.62;
 }
 
-.hero-play-decoration::after {
-  content: "";
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 8px 0 8px 13px;
-  border-color: transparent transparent transparent #2f7df6;
-  margin-left: 3px;
+.hero-play-decoration svg {
+  width: 48%;
+  height: 48%;
 }
 
 .hero-play-decoration--1 {
-  left: 8%;
-  bottom: 30%;
-  transform: rotate(-8deg);
+  left: 13.5%;
+  top: 45%;
+  transform: rotate(-12deg);
 }
 
 .hero-play-decoration--2 {
-  right: 9%;
-  top: 42%;
-  transform: rotate(6deg);
+  right: 4%;
+  top: 55%;
+  transform: rotate(15deg);
+  background: linear-gradient(35deg, #ead0fb, #d0ceff 48%, #ade0ff);
 }
 
-.hero-play-decoration--3 {
-  right: 6%;
-  bottom: 16%;
-  transform: rotate(-5deg);
+.hero-editorial {
+  position: absolute;
+  z-index: 3;
+  color: #869dcc;
+  font-size: clamp(9px, 0.82vw, 14px);
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: 0.17em;
+  opacity: 0.76;
+}
+
+.hero-editorial--left {
+  left: 5%;
+  top: 29%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.6em;
+  padding: 0.5em 0 0.5em 1.8em;
+  border-left: 1px solid #98add9;
+}
+
+.hero-editorial--right {
+  right: 4.6%;
+  top: 9%;
+  padding: 0.6em 1.8em 2.3em 0;
+  border-right: 1px solid #98add9;
+  text-align: right;
 }
 
 .hero-handwriting {
-  opacity: 0.55;
   position: absolute;
+  z-index: 3;
+  color: #82a9fa;
+  opacity: 0.78;
   font-family: "Caveat", "Segoe Script", cursive;
-  line-height: 1.15;
-  text-align: center;
-  font-weight: 600;
+  font-size: clamp(30px, 3.65vw, 64px);
+  font-weight: 400;
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.hero-handwriting span {
+  display: block;
+}
+
+.hero-handwriting-swoosh {
+  position: absolute;
+  right: -8%;
+  bottom: -0.55em;
+  width: 100%;
+  height: 0.7em;
+  overflow: visible;
 }
 
 .hero-handwriting--1 {
-  left: 5%;
-  top: 15%;
-  color: #8cb5ff;
-  transform: rotate(-4deg);
+  left: 4.3%;
+  top: 8.5%;
+  font-size: clamp(36px, 4.4vw, 76px);
+  transform: rotate(-12deg);
+}
+
+.hero-handwriting--1 span + span {
+  margin-left: 0.85em;
 }
 
 .hero-handwriting--2 {
-  left: 4%;
-  bottom: 17%;
-  color: #a8c5ff;
-  transform: rotate(3deg);
+  left: 3.6%;
+  bottom: 15%;
+  font-size: clamp(32px, 3.9vw, 67px);
+  transform: rotate(-15deg);
+}
+
+.hero-handwriting--2 span:nth-child(2) {
+  margin-left: 0.35em;
+}
+
+.hero-handwriting--2 span:last-child {
+  margin-top: 0.15em;
+  font-size: 0.8em;
 }
 
 .hero-handwriting--3 {
-  right: 4%;
-  bottom: 19%;
-  color: #a8c5ff;
-  transform: rotate(-3deg);
+  right: 6%;
+  bottom: 12%;
+  transform: rotate(-13deg);
+}
+
+.hero-handwriting--3 span + span {
+  margin-left: 0.5em;
 }
 
 .hero-handwriting--4 {
-  right: 5%;
-  top: 23%;
-  color: #bcd0ff;
-  transform: rotate(4deg);
+  right: 3.7%;
+  top: 31%;
+  font-family: "Nanum Pen Script", cursive;
+  font-size: clamp(28px, 3.35vw, 56px);
+  line-height: 1.03;
+  letter-spacing: -0.06em;
+  transform: rotate(-12deg);
+}
+
+.hero-handwriting--4 span + span {
+  margin-left: 0.8em;
+}
+
+@media (max-width: 1100px) {
+  .hero-handwriting {
+    font-size: 3.3vw;
+    opacity: 0.65;
+  }
+
+  .hero-handwriting--4 {
+    font-size: 2.6vw;
+  }
+
+  .hero-dot-pattern {
+    width: 65px;
+    height: 65px;
+    background-size: 14px 14px;
+  }
+}
+
+@media (max-width: 900px) {
+  .hero-handwriting--2,
+  .hero-handwriting--3,
+  .hero-handwriting--4,
+  .hero-editorial {
+    display: none;
+  }
+
+  .hero-background-artwork {
+    opacity: 0.75;
+    mask-image: linear-gradient(90deg, #000, transparent 29%, transparent 71%, #000);
+  }
+
+  .hero-orb--1 {
+    left: -5%;
+  }
+
+  .hero-orb--3 {
+    right: 0;
+  }
+
+  .hero-dot-pattern--1 {
+    left: 2%;
+    top: 43%;
+  }
+
+  .hero-dot-pattern--2 {
+    right: 2%;
+  }
+
+  .hero-play-decoration--1 {
+    left: -2%;
+    top: 61%;
+  }
+
+  .hero-play-decoration--2 {
+    right: -2%;
+    top: 74%;
+  }
+
+  .hero-handwriting--1 {
+    left: 4%;
+    top: 4%;
+    font-size: 30px;
+    opacity: 0.55;
+  }
+}
+
+@media (max-width: 767px) {
+  .hero-orb--2,
+  .hero-dot-pattern--2,
+  .hero-play-decoration--2 {
+    display: none;
+  }
+
+  .hero-orb--1 {
+    top: 14%;
+    opacity: 0.3;
+  }
+
+  .hero-orb--3 {
+    top: 4%;
+    opacity: 0.3;
+  }
+
+  .hero-dot-pattern--1 {
+    left: -18px;
+    opacity: 0.3;
+  }
+
+  .hero-play-decoration--1 {
+    width: 54px;
+    left: -22px;
+    top: 63%;
+    opacity: 0.35;
+  }
+
+  .hero-handwriting--1 {
+    top: 3%;
+    font-size: 25px;
+    opacity: 0.5;
+  }
+}
+
+@media (max-width: 900px) and (max-height: 700px) {
+  .hero-handwriting--1 {
+    top: 1.5%;
+    left: 3%;
+    font-size: 20px;
+  }
 }
 
 .hero-content {
@@ -363,21 +506,6 @@ select {
   transform: translateY(-2px);
   background: #f5f8ff;
   border-color: rgba(47, 125, 246, 0.5);
-}
-
-@media (max-width: 767px) {
-  .hero-blob--3,
-  .hero-blob--5,
-  .hero-blob--7,
-  .hero-dot-pattern--2,
-  .hero-dot-pattern--4,
-  .hero-play-decoration--2,
-  .hero-play-decoration--3,
-  .hero-handwriting--2,
-  .hero-handwriting--3,
-  .hero-handwriting--4 {
-    display: none;
-  }
 }
 
 @media (min-width: 640px) {
