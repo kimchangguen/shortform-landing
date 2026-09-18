@@ -1,8 +1,6 @@
 "use client";
 
-import type { CSSProperties, KeyboardEvent, PointerEvent } from "react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight, Heart, MessageCircle, Send, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 type ShortformVideo = {
   id: number;
@@ -15,33 +13,6 @@ type ShortformVideo = {
   likes: string;
   comments: string;
   shares: string;
-};
-
-type PhoneSlot = {
-  slot: number;
-  x: string;
-  y: string;
-  rotate: string;
-  scale: number;
-  z: number;
-};
-
-type TextPart = {
-  text: string;
-  className?: string;
-};
-
-type TypingPhase = 0 | 1 | 2 | 3 | 4 | 5;
-
-type BackdropCard = {
-  src: string;
-  side: "left" | "right";
-  top: string;
-  size: number;
-  rotate: string;
-  opacity: number;
-  blur?: boolean;
-  delay: number;
 };
 
 const baseVideos: Omit<ShortformVideo, "id">[] = [
@@ -119,155 +90,26 @@ const shortformVideos: ShortformVideo[] = Array.from({ length: 60 }, (_, index) 
   };
 });
 
-const phoneSlots: PhoneSlot[] = [
-  { slot: 0, x: "13.3%", y: "52%", rotate: "-8deg", scale: 0.97, z: 16 },
-  { slot: 1, x: "28.2%", y: "50%", rotate: "7deg", scale: 0.99, z: 24 },
-  { slot: 2, x: "42.8%", y: "49%", rotate: "-5deg", scale: 1.04, z: 34 },
-  { slot: 3, x: "57.2%", y: "49%", rotate: "-4deg", scale: 1.03, z: 32 },
-  { slot: 4, x: "72.4%", y: "50.5%", rotate: "8deg", scale: 0.99, z: 24 },
-  { slot: 5, x: "87.2%", y: "54%", rotate: "8deg", scale: 0.96, z: 16 },
-];
-
-const typingSecondParts: TextPart[] = [
-  { text: "이제 고객은 검색보다 " },
-  { text: "영상을", className: "text-[#e10b04]" },
-  { text: " 봅니다" },
-];
-
-const typingThirdParts: TextPart[] = [
-  { text: "숏폼으로", className: "block" },
-  { text: "터집니다.", className: "mt-1 block text-[4.9rem] text-[#df0900] sm:text-[7.8rem] lg:text-[10.8rem]" },
-];
-
-const typingFirstParts: TextPart[] = [{ text: "요즘 맛집은 광고 안 합니다." }];
-
-const typingMessages: [TextPart[], TextPart[], TextPart[]] = [typingFirstParts, typingSecondParts, typingThirdParts];
-
 const CONSULTATION_HREF = "#consultation";
-
-const backdropCards: BackdropCard[] = [
-  { src: "/hero-media/media-1.jpg", side: "left", top: "15%", size: 108, rotate: "-7deg", opacity: 0.4, blur: true, delay: 0 },
-  { src: "/hero-media/media-2.jpg", side: "left", top: "48%", size: 136, rotate: "5deg", opacity: 0.72, delay: 1.4 },
-  { src: "/hero-media/media-3.jpg", side: "left", top: "80%", size: 100, rotate: "-4deg", opacity: 0.36, blur: true, delay: 2.6 },
-  { src: "/hero-media/media-4.jpg", side: "right", top: "17%", size: 112, rotate: "6deg", opacity: 0.4, blur: true, delay: 0.8 },
-  { src: "/hero-media/media-5.jpg", side: "right", top: "50%", size: 138, rotate: "-5deg", opacity: 0.72, delay: 2 },
-  { src: "/hero-media/media-6.jpg", side: "right", top: "80%", size: 102, rotate: "4deg", opacity: 0.38, blur: true, delay: 3.2 },
-];
-
-function HeroNetworkBackdrop() {
-  return (
-    <div aria-hidden className="pointer-events-none absolute inset-0 z-0 hidden overflow-hidden sm:block">
-      {backdropCards.map((card) => (
-        <div
-          key={card.src + card.side}
-          className={`hero-backdrop-card hero-backdrop-card--${card.side}`}
-          style={
-            {
-              "--card-top": card.top,
-              "--card-size": `${card.size}px`,
-              "--card-rotate": card.rotate,
-              "--card-opacity": card.opacity,
-              animationDelay: `${card.delay}s`,
-            } as CSSProperties
-          }
-        >
-          <img
-            src={card.src}
-            alt=""
-            width={card.size}
-            height={Math.round((card.size * 16) / 9)}
-            loading="lazy"
-            decoding="async"
-            className={`h-full w-full object-cover ${card.blur ? "blur-[1.5px]" : ""}`}
-          />
-          <span className="hero-backdrop-play" />
-        </div>
-      ))}
-
-      <div className="hero-backdrop-badge hero-backdrop-badge--ig" />
-      <div className="hero-backdrop-badge hero-backdrop-badge--yt" />
-
-      <div className="hero-network-flow">
-        <span>1 SHOOT</span>
-        <span>20 SHORTS</span>
-        <span>32 CHANNELS</span>
-        <span>2.4M FOLLOWERS</span>
-      </div>
-    </div>
-  );
-}
-
-function HeroNetworkBackdropMobile() {
-  return (
-    <div aria-hidden className="pointer-events-none absolute inset-0 z-0 block overflow-hidden sm:hidden">
-      <img
-        src="/hero-media/media-2.jpg"
-        alt=""
-        width={68}
-        height={121}
-        loading="lazy"
-        decoding="async"
-        className="absolute left-2 top-3 h-[121px] w-[68px] -rotate-6 rounded-xl object-cover opacity-30 shadow-md"
-      />
-      <img
-        src="/hero-media/media-5.jpg"
-        alt=""
-        width={68}
-        height={121}
-        loading="lazy"
-        decoding="async"
-        className="absolute right-2 top-3 h-[121px] w-[68px] rotate-6 rounded-xl object-cover opacity-30 shadow-md"
-      />
-    </div>
-  );
-}
+const PORTFOLIO_HREF = "#portfolio";
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
 }
 
-function wrapIndex(value: number, length: number) {
-  return ((value % length) + length) % length;
-}
-
-function partLength(parts: TextPart[]) {
-  return parts.reduce((total, part) => total + Array.from(part.text).length, 0);
-}
-
-function renderTypedParts(parts: TextPart[], count: number) {
-  let remaining = count;
-
-  return parts.map((part, index) => {
-    const characters = Array.from(part.text);
-    const visibleCharacters = characters.slice(0, clamp(remaining, 0, characters.length)).join("");
-    remaining -= characters.length;
-
-    return (
-      <span key={`${part.text}-${index}`} className={part.className}>
-        {visibleCharacters}
-      </span>
-    );
-  });
-}
-
-function DoodleUnderline() {
+function MarkerUnderline() {
   return (
     <svg
       aria-hidden
-      className="pointer-events-none absolute -bottom-1 left-1/2 h-3 w-[72%] -translate-x-1/2 text-[#df0900]"
-      viewBox="0 0 420 32"
+      className="pointer-events-none absolute -bottom-1 left-1/2 h-3 w-[112%] -translate-x-1/2 text-[#9CC2FF]"
+      viewBox="0 0 220 20"
       fill="none"
+      preserveAspectRatio="none"
     >
       <path
-        d="M8 20C68 12 105 25 164 16C229 6 284 20 412 10"
+        d="M4 13C40 6 80 15 112 9C150 3 180 12 216 7"
         stroke="currentColor"
-        strokeWidth="4"
-        strokeLinecap="round"
-      />
-      <path
-        d="M18 27C93 20 151 29 222 21C287 14 336 22 402 17"
-        stroke="currentColor"
-        strokeWidth="2.5"
+        strokeWidth="7"
         strokeLinecap="round"
         opacity="0.55"
       />
@@ -275,256 +117,115 @@ function DoodleUnderline() {
   );
 }
 
-function DoodleStar() {
+function BrushUnderline() {
   return (
     <svg
       aria-hidden
-      className="pointer-events-none absolute -right-28 -top-24 hidden h-14 w-14 text-[#df0900] md:block lg:-right-44 lg:-top-28 lg:h-16 lg:w-16"
-      viewBox="0 0 80 80"
+      className="pointer-events-none absolute -bottom-2 left-1/2 h-3.5 w-[105%] -translate-x-1/2 text-[#7FAAFF]"
+      viewBox="0 0 240 22"
       fill="none"
+      preserveAspectRatio="none"
     >
       <path
-        d="M41 8L48 31L71 22L53 39L69 59L43 50L27 72L28 47L5 38L30 32L41 8Z"
+        d="M6 14C48 5 96 18 132 10C168 3 200 16 234 8"
         stroke="currentColor"
-        strokeWidth="5"
-        strokeLinejoin="round"
+        strokeWidth="4.5"
+        strokeLinecap="round"
+        opacity="0.6"
       />
-      <path d="M31 19L55 64M61 19L17 56" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
     </svg>
   );
 }
 
-function TitleAccent() {
+function PriceMarker() {
   return (
     <svg
       aria-hidden
-      className="pointer-events-none absolute right-[-8.75rem] top-[55%] hidden h-28 w-24 text-[#df0900] md:block lg:right-[-10rem]"
-      viewBox="0 0 120 150"
+      className="pointer-events-none absolute -bottom-1 left-1/2 h-4 w-[118%] -translate-x-1/2"
+      viewBox="0 0 200 22"
       fill="none"
+      preserveAspectRatio="none"
     >
-      <path d="M75 10C52 42 33 68 18 88" stroke="currentColor" strokeWidth="7" strokeLinecap="round" />
-      <path d="M95 65C63 80 38 92 17 101" stroke="currentColor" strokeWidth="7" strokeLinecap="round" />
-      <path d="M93 104C67 111 44 116 25 119" stroke="currentColor" strokeWidth="6" strokeLinecap="round" />
+      <path
+        d="M4 15C36 6 70 18 100 12C132 6 164 17 196 9"
+        stroke="#FFE236"
+        strokeWidth="10"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
 
-function ButtonBurst({ side }: { side: "left" | "right" }) {
-  const sideClass =
-    side === "left"
-      ? "-left-10 top-[-1rem] rotate-[-14deg] md:-left-14"
-      : "-right-10 bottom-[-1rem] rotate-[14deg] md:-right-14";
-
+function HeroCurves() {
   return (
     <svg
       aria-hidden
-      className={`pointer-events-none absolute h-16 w-16 text-black ${sideClass}`}
-      viewBox="0 0 90 90"
+      className="absolute inset-0 h-full w-full"
+      viewBox="0 0 1200 800"
       fill="none"
+      preserveAspectRatio="xMidYMid slice"
     >
-      <path d="M45 10V30" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
-      <path d="M20 24L34 38" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
-      <path d="M10 52H30" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function PhoneCard({
-  item,
-  slot,
-  direction,
-  isPaused,
-  onSelect,
-}: {
-  item: ShortformVideo;
-  slot: PhoneSlot;
-  direction: number;
-  isPaused: boolean;
-  onSelect: (item: ShortformVideo) => void;
-}) {
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const style = {
-    "--slot-x": slot.x,
-    "--slot-y": slot.y,
-    "--slot-rotate": slot.rotate,
-    "--slot-scale": slot.scale.toString(),
-    "--enter-x": direction > 0 ? "-18px" : "18px",
-    zIndex: slot.z,
-  } as CSSProperties;
-
-  useEffect(() => {
-    const video = videoRef.current;
-
-    if (!video) {
-      return;
-    }
-
-    if (isPaused) {
-      video.pause();
-      return;
-    }
-
-    video.muted = true;
-    void video.play().catch(() => undefined);
-  }, [isPaused, item.videoSrc]);
-
-  return (
-    <div className="shortform-phone-slot" data-slot={slot.slot} style={style}>
-      <article
-        className="shortform-phone-shell cursor-pointer"
-        role="button"
-        tabIndex={0}
-        aria-label={`${item.id}번 숏폼 릴스 크게 보기`}
-        onClick={() => onSelect(item)}
-        onKeyDown={(event: KeyboardEvent<HTMLElement>) => {
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            onSelect(item);
-          }
-        }}
-      >
-        <div className="shortform-phone-notch" />
-        <div className="shortform-phone-screen">
-          {item.videoSrc ? (
-            <video
-              ref={videoRef}
-              className="absolute inset-0 h-full w-full object-cover"
-              src={item.videoSrc}
-              poster={item.poster}
-              muted
-              loop
-              playsInline
-              autoPlay
-              preload="metadata"
-            />
-          ) : (
-            <img className="absolute inset-0 h-full w-full object-cover" src={item.poster} alt="" draggable={false} />
-          )}
-        </div>
-      </article>
-    </div>
-  );
-}
-
-function ReelsModal({ item, onClose }: { item: ShortformVideo; onClose: () => void }) {
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const [isVisible, setIsVisible] = useState(false);
-
-  const stopVideo = useCallback(() => {
-    const video = videoRef.current;
-
-    if (!video) {
-      return;
-    }
-
-    video.pause();
-    video.muted = true;
-
-    try {
-      video.currentTime = 0;
-    } catch {
-      // Metadata can arrive after close on slower devices.
-    }
-  }, []);
-
-  const closeModal = useCallback(() => {
-    stopVideo();
-    setIsVisible(false);
-    onClose();
-  }, [onClose, stopVideo]);
-
-  useEffect(() => {
-    const animationFrameId = window.requestAnimationFrame(() => setIsVisible(true));
-    const video = videoRef.current;
-
-    if (video) {
-      video.muted = false;
-      video.volume = 1;
-      void video.play().catch(() => undefined);
-    }
-
-    const onKeyDown = (event: globalThis.KeyboardEvent) => {
-      if (event.key === "Escape") {
-        closeModal();
-      }
-    };
-
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", onKeyDown);
-
-    return () => {
-      window.cancelAnimationFrame(animationFrameId);
-      stopVideo();
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", onKeyDown);
-    };
-  }, [closeModal, stopVideo]);
-
-  return (
-    <div
-      className={`fixed inset-0 z-[100] flex items-center justify-center bg-black/80 px-4 py-6 transition-opacity duration-200 ${
-        isVisible ? "opacity-100" : "opacity-0"
-      }`}
-      role="dialog"
-      aria-modal="true"
-      aria-label={`${item.id}번 숏폼 원본 영상 보기`}
-      onClick={closeModal}
-    >
-      <button
-        type="button"
-        aria-label="영상 닫기"
-        className="absolute right-4 top-4 z-[110] grid h-11 w-11 place-items-center rounded-full bg-black/45 text-white shadow-lg backdrop-blur-sm transition-colors hover:bg-black/65 focus:outline-none focus:ring-4 focus:ring-white/25 sm:right-6 sm:top-6 sm:h-12 sm:w-12"
-        onClick={(event) => {
-          event.stopPropagation();
-          closeModal();
-        }}
-      >
-        <X className="h-7 w-7" strokeWidth={3} />
-      </button>
-
-      <div
-        className={`relative aspect-[9/16] h-[min(88vh,900px)] max-h-[90vh] max-w-[92vw] overflow-hidden rounded-[1.5rem] bg-black shadow-[0_24px_80px_rgba(0,0,0,0.5)] transition-transform duration-200 ${
-          isVisible ? "scale-100" : "scale-[0.985]"
-        }`}
-        onClick={(event) => event.stopPropagation()}
-      >
-        <video
-          ref={videoRef}
-          className="h-full w-full object-contain"
-          src={item.videoSrc}
-          poster={item.poster}
-          autoPlay
-          controls
-          loop
-          playsInline
-          preload="metadata"
+      <path
+        d="M-40 620C220 520 380 700 620 560C820 450 980 560 1240 380"
+        stroke="#9CB8FF"
+        strokeWidth="1.6"
+        opacity="0.28"
+      />
+      <path
+        d="M1240 140C980 260 860 90 640 220C440 340 260 200 -40 300"
+        stroke="#C4D5FF"
+        strokeWidth="1.4"
+        opacity="0.24"
+      />
+      <g className="hidden md:block">
+        <path
+          d="M-40 200C160 120 300 260 520 180C740 100 880 220 1240 120"
+          stroke="#7FAAFF"
+          strokeWidth="1.2"
+          opacity="0.2"
         />
+      </g>
+    </svg>
+  );
+}
 
-        <div className="pointer-events-none absolute inset-0 text-white">
-          <button
-            type="button"
-            aria-label="영상 닫기"
-            className="pointer-events-auto absolute left-4 top-4 grid h-11 w-11 place-items-center rounded-full bg-black/35 text-white backdrop-blur-sm transition-colors hover:bg-black/55 focus:outline-none focus:ring-4 focus:ring-white/25"
-            onClick={closeModal}
-          >
-            <ChevronLeft className="h-8 w-8" strokeWidth={3.2} />
-          </button>
+function HeroBackgroundDecoration() {
+  return (
+    <div aria-hidden="true" className="hero-bg">
+      <div className="hero-blob hero-blob--1" />
+      <div className="hero-blob hero-blob--2" />
+      <div className="hero-blob hero-blob--3" />
+      <div className="hero-blob hero-blob--4" />
+      <div className="hero-blob hero-blob--5" />
+      <div className="hero-blob hero-blob--6" />
+      <div className="hero-blob hero-blob--7" />
 
-          <div className="absolute bottom-24 right-4 flex flex-col items-center gap-5 drop-shadow-[0_2px_8px_rgba(0,0,0,0.75)] sm:bottom-28">
-            <div className="flex flex-col items-center">
-              <Heart className="h-9 w-9 fill-white" strokeWidth={2.4} />
-              <span className="mt-1 text-xs font-black">{item.likes}</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <MessageCircle className="h-9 w-9 fill-white" strokeWidth={2.4} />
-              <span className="mt-1 text-xs font-black">{item.comments}</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <Send className="h-8 w-8 fill-white" strokeWidth={2.4} />
-              <span className="mt-1 text-xs font-black">{item.shares}</span>
-            </div>
-          </div>
-        </div>
+      <HeroCurves />
+
+      <div className="hero-dot-pattern hero-dot-pattern--1" />
+      <div className="hero-dot-pattern hero-dot-pattern--2" />
+      <div className="hero-dot-pattern hero-dot-pattern--3" />
+      <div className="hero-dot-pattern hero-dot-pattern--4" />
+
+      <div className="hero-play-decoration hero-play-decoration--1" />
+      <div className="hero-play-decoration hero-play-decoration--2" />
+      <div className="hero-play-decoration hero-play-decoration--3" />
+
+      <div className="hero-handwriting hero-handwriting--1 text-[clamp(1.05rem,1.6vw,1.5rem)]">
+        More Customers
+      </div>
+      <div className="hero-handwriting hero-handwriting--2 text-[clamp(1.05rem,1.6vw,1.5rem)]">
+        Good Content
+        <br />
+        Bigger Business
+      </div>
+      <div className="hero-handwriting hero-handwriting--3 text-[clamp(1.05rem,1.6vw,1.5rem)]">
+        Short Form
+        <br />
+        Big Impact
+      </div>
+      <div className="hero-handwriting hero-handwriting--4 text-[clamp(1.05rem,1.6vw,1.5rem)]">
+        Make People Stop
       </div>
     </div>
   );
@@ -564,225 +265,132 @@ function PortfolioMarquee() {
 }
 
 export function ShortformHero() {
-  const typingRef = useRef<HTMLElement | null>(null);
-  const isHeroReleasedRef = useRef(false);
-  const isTypingRef = useRef(true);
-  const currentPhaseRef = useRef<TypingPhase>(0);
-  const touchStartYRef = useRef(0);
-  const [activePhase, setActivePhase] = useState<TypingPhase>(0);
-  const [typedCount, setTypedCount] = useState(1);
-
-  const canPinHero = useCallback(() => {
-    const section = typingRef.current;
-
-    if (!section || isHeroReleasedRef.current) {
-      return false;
-    }
-
-    const rect = section.getBoundingClientRect();
-    return rect.top <= 1 && rect.bottom > 0;
-  }, []);
-
-  const beginTyping = useCallback((phase: TypingPhase) => {
-    if (currentPhaseRef.current === phase) {
-      return;
-    }
-
-    currentPhaseRef.current = phase;
-    isTypingRef.current = true;
-    setActivePhase(phase);
-    setTypedCount(1);
-  }, []);
-
-  const triggerNextSentence = useCallback(() => {
-    if (isHeroReleasedRef.current || isTypingRef.current || currentPhaseRef.current === 5) {
-      return;
-    }
-
-    beginTyping((currentPhaseRef.current + 1) as TypingPhase);
-  }, [beginTyping]);
+  const scrollWrapperRef = useRef<HTMLElement | null>(null);
+  const stepMaskRef = useRef(0);
+  const rafRef = useRef<number | null>(null);
+  const [stepMask, setStepMask] = useState(0);
+  const [jsReady, setJsReady] = useState(false);
 
   useEffect(() => {
-    if (activePhase <= 2) {
-      const totalLength = partLength(typingMessages[activePhase as 0 | 1 | 2]);
-      const intervalId = window.setInterval(() => {
-        setTypedCount((currentCount) => {
-          const nextCount = Math.min(currentCount + 1, totalLength);
-
-          if (nextCount === totalLength) {
-            window.clearInterval(intervalId);
-            isTypingRef.current = false;
-          }
-
-          return nextCount;
-        });
-      }, activePhase === 2 ? 38 : 30);
-
-      return () => {
-        window.clearInterval(intervalId);
-      };
-    }
-
-    const revealDelay = activePhase === 5 ? 900 : 750;
-    const timeoutId = window.setTimeout(() => {
-      isTypingRef.current = false;
-
-      if (activePhase === 5) {
-        isHeroReleasedRef.current = true;
-      }
-    }, revealDelay);
-
-    return () => {
-      window.clearTimeout(timeoutId);
-    };
-  }, [activePhase]);
+    setJsReady(true);
+  }, []);
 
   useEffect(() => {
-    const lockToHeroTop = () => {
-      const section = typingRef.current;
+    const compute = () => {
+      const el = scrollWrapperRef.current;
 
-      if (section) {
-        window.scrollTo({ top: section.offsetTop, behavior: "instant" });
-      }
-    };
-
-    const onWheel = (event: WheelEvent) => {
-      if (!canPinHero() || event.deltaY <= 1) {
+      if (!el) {
         return;
       }
 
-      event.preventDefault();
-      lockToHeroTop();
-      triggerNextSentence();
+      const rect = el.getBoundingClientRect();
+      const total = rect.height - window.innerHeight;
+      const progress = total > 0 ? clamp(-rect.top / total, 0, 1) : rect.top <= 0 ? 1 : 0;
+
+      let nextMask = 0;
+
+      if (progress > 0.04) nextMask = 1;
+      if (progress > 0.36) nextMask = 2;
+      if (progress > 0.64) nextMask = 3;
+      if (progress > 0.84) nextMask = 4;
+
+      if (nextMask !== stepMaskRef.current) {
+        stepMaskRef.current = nextMask;
+        setStepMask(nextMask);
+      }
     };
 
-    const onTouchStart = (event: TouchEvent) => {
-      touchStartYRef.current = event.touches[0]?.clientY ?? 0;
-    };
+    let ticking = false;
 
-    const onTouchMove = (event: TouchEvent) => {
-      if (!canPinHero()) {
+    const onScroll = () => {
+      if (ticking) {
         return;
       }
 
-      const currentY = event.touches[0]?.clientY ?? touchStartYRef.current;
-      const deltaY = touchStartYRef.current - currentY;
-
-      if (deltaY <= 3) {
-        touchStartYRef.current = currentY;
-        return;
-      }
-
-      event.preventDefault();
-      lockToHeroTop();
-      triggerNextSentence();
-      touchStartYRef.current = currentY;
+      ticking = true;
+      rafRef.current = window.requestAnimationFrame(() => {
+        compute();
+        ticking = false;
+      });
     };
 
-    window.addEventListener("wheel", onWheel, { passive: false });
-    window.addEventListener("touchstart", onTouchStart, { passive: true });
-    window.addEventListener("touchmove", onTouchMove, { passive: false });
+    compute();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
 
     return () => {
-      window.removeEventListener("wheel", onWheel);
-      window.removeEventListener("touchstart", onTouchStart);
-      window.removeEventListener("touchmove", onTouchMove);
-    };
-  }, [canPinHero, triggerNextSentence]);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
 
-  const firstOpacity = activePhase === 0 ? 1 : 0;
-  const secondOpacity = activePhase === 1 ? 1 : 0;
-  const thirdOpacity = activePhase === 2 ? 1 : 0;
-  const phase3Active = activePhase === 3;
-  const phase4Active = activePhase === 4;
-  const phase5Active = activePhase === 5;
+      if (rafRef.current !== null) {
+        window.cancelAnimationFrame(rafRef.current);
+      }
+    };
+  }, []);
+
+  const step1Visible = stepMask >= 1;
+  const step2Visible = stepMask >= 2;
+  const step3Visible = stepMask >= 3;
+  const ctaVisible = stepMask >= 4;
 
   return (
     <>
-      <section ref={typingRef} id="top" className="shortform-typing-hero relative mx-auto mt-0 w-full max-w-[1920px] bg-[#f7f7f7] pt-0">
-        <div className="shortform-typing-stage sticky top-0 z-10 grid !h-[800px] place-items-center overflow-hidden px-4 pt-0 text-center sm:px-6 lg:px-8">
-          <div className="relative flex h-full w-full max-w-[1920px] items-center justify-center">
-            <HeroNetworkBackdrop />
-            <HeroNetworkBackdropMobile />
+      <section ref={scrollWrapperRef} id="top" className="hero-scroll">
+        <div className="hero-sticky">
+          <HeroBackgroundDecoration />
 
-            <div
-              className="absolute inset-x-0 z-10 mx-auto w-fit transition-opacity duration-200"
-              style={{ opacity: firstOpacity }}
-            >
-              <div className="relative inline-block">
-                <p className="break-keep text-[2.2rem] font-black leading-tight text-black sm:text-[3.9rem] lg:text-[4.9rem]">
-                  {renderTypedParts(typingFirstParts, activePhase === 0 ? typedCount : partLength(typingFirstParts))}
-                </p>
-                <DoodleUnderline />
-              </div>
-            </div>
-
-            <p
-              className="absolute inset-x-0 z-10 mx-auto break-keep text-[2.25rem] font-black leading-tight text-black transition-opacity duration-200 sm:text-[4.65rem] lg:text-[6.35rem]"
-              style={{ opacity: secondOpacity }}
-            >
-              {renderTypedParts(typingSecondParts, activePhase === 1 ? typedCount : partLength(typingSecondParts))}
-            </p>
-
-            <div
-              className="absolute inset-x-0 z-10 mx-auto w-fit break-keep text-center font-black leading-[0.92] text-black transition-opacity duration-200"
-              style={{ opacity: thirdOpacity }}
-            >
-              <DoodleStar />
-              <TitleAccent />
-              <h1 className="text-[4.4rem] sm:text-[7.3rem] lg:text-[9.5rem]">
-                {renderTypedParts(typingThirdParts, activePhase === 2 ? typedCount : partLength(typingThirdParts))}
+          <div
+            className={`hero-content mx-auto flex w-full max-w-[1180px] flex-col items-center px-6 text-center sm:px-8 ${
+              jsReady ? "js-enabled" : ""
+            }`}
+          >
+            <div className={`hero-step ${step1Visible ? "is-visible" : ""}`}>
+              <h1 className="hero-headline break-keep">
+                <span className="hero-step-line" style={{ transitionDelay: "0ms" }}>
+                  이제 고객은
+                </span>
+                <span className="hero-step-line hero-headline-accent" style={{ transitionDelay: "110ms" }}>
+                  검색보다
+                  <MarkerUnderline />
+                </span>
+                <span className="hero-step-line" style={{ transitionDelay: "220ms" }}>
+                  영상을 봅니다
+                </span>
               </h1>
             </div>
 
-            <div
-              className="absolute inset-x-0 z-10 mx-auto w-fit break-keep text-center transition-all duration-500 ease-out"
-              style={{
-                opacity: phase3Active ? 1 : 0,
-                transform: phase3Active ? "translateY(0)" : "translateY(18px)",
-              }}
-            >
-              <p className="text-[1.4rem] font-bold text-black/60 sm:text-[2.1rem] lg:text-[2.6rem]">촬영부터</p>
-              <p className="mt-2 break-keep text-[1.85rem] font-black leading-tight text-black sm:text-[3.1rem] lg:text-[4rem]">
-                <span className="text-[#df0900]">32개 계정</span>
-                <span className="mx-2 text-black/35">·</span>
-                <span className="text-[#df0900]">240만 팔로워</span>
+            <div className={`hero-step mt-3 sm:mt-4 ${step2Visible ? "is-visible" : ""}`}>
+              <p className="hero-handwrite-main relative inline-block break-keep">
+                숏폼으로 터집니다
+                <BrushUnderline />
+              </p>
+            </div>
+
+            <div className={`hero-step mt-7 flex flex-col gap-1.5 sm:mt-9 ${step3Visible ? "is-visible" : ""}`}>
+              <p className="hero-price-line">
+                촬영부터 <span className="hero-number">32개 계정</span>,{" "}
+                <span className="hero-number">240만 팔로워</span>
+              </p>
+              <p className="hero-price-line">
+                1,000만원 넘는 서비스를{" "}
+                <span className="hero-number-price">
+                  350만원
+                  <PriceMarker />
+                </span>
+                에 해드려요
               </p>
             </div>
 
             <div
-              className="absolute inset-x-0 z-10 mx-auto w-fit break-keep text-center transition-all duration-500 ease-out"
-              style={{
-                opacity: phase4Active ? 1 : 0,
-                transform: phase4Active ? "translateY(0)" : "translateY(18px)",
-              }}
+              className={`hero-step hero-cta-group mt-8 flex w-full flex-col items-center gap-3 sm:mt-10 sm:w-auto sm:flex-row sm:gap-4 ${
+                ctaVisible ? "is-visible" : ""
+              }`}
             >
-              <p className="text-[1.5rem] font-bold text-black/45 sm:text-[2.5rem] lg:text-[3.2rem]">
-                1,000만원 넘는 견적
-              </p>
-            </div>
-
-            <div
-              className="absolute inset-x-0 z-10 mx-auto flex w-fit flex-col items-center break-keep text-center transition-all duration-500 ease-out"
-              style={{
-                opacity: phase5Active ? 1 : 0,
-                transform: phase5Active ? "translateY(0)" : "translateY(18px)",
-              }}
-            >
-              <p className="text-[2.7rem] font-black leading-[0.95] text-[#df0900] sm:text-[4.8rem] lg:text-[6.6rem]">
-                350만원에 해드려요
-              </p>
-              <a
-                href={CONSULTATION_HREF}
-                className="pointer-events-auto mt-6 inline-flex items-center gap-2 rounded-full bg-[#0F3A2E] px-8 py-3.5 text-[0.95rem] font-semibold text-white shadow-[0_10px_24px_rgba(15,58,46,0.28)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#1a5a47] hover:shadow-[0_14px_30px_rgba(15,58,46,0.32)] sm:text-[1.05rem]"
-                style={{
-                  opacity: phase5Active ? 1 : 0,
-                  transitionDelay: phase5Active ? "400ms" : "0ms",
-                  transitionProperty: "opacity",
-                  transitionDuration: "500ms",
-                }}
-              >
-                지금 바로 견적 받기
+              <a href={CONSULTATION_HREF} className="hero-cta-primary w-full text-center sm:w-auto">
+                지금 바로 상담하기
+              </a>
+              <a href={PORTFOLIO_HREF} className="hero-cta-secondary w-full text-center sm:w-auto">
+                포트폴리오 보기
               </a>
             </div>
           </div>
