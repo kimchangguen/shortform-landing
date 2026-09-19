@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { OwnerMessageSection } from "./OwnerMessageSection";
 import {
   CalendarDays,
   CircleDollarSign,
@@ -218,15 +219,7 @@ function ReasonsHeading() {
 export function BottomConversionSections() {
   return (
     <>
-      <section className="site-section px-4 py-[150px] text-center sm:px-6 sm:py-[170px] lg:px-8">
-        <div className="mx-auto w-[43%] min-w-[320px] max-w-[468px] bg-[#f9f8f6]">
-          <img
-            src="/09-02-transparent.png"
-            alt=""
-            className="mx-auto h-auto w-full max-w-full bg-transparent object-contain mix-blend-multiply"
-          />
-        </div>
-      </section>
+      <OwnerMessageSection />
 
       <section className="site-section px-4 pb-20 pt-0 text-center sm:px-6 lg:px-8">
         <div className="mx-auto w-full max-w-[864px]">
