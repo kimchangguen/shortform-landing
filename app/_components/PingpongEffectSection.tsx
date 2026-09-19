@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { PlaceGrowthSection } from "./PlaceGrowthSection";
+import styles from "./PlaceGrowthSection.module.css";
 
 const pingpongCards = [
   {
@@ -35,7 +37,7 @@ const pingpongCards = [
 ];
 
 function PingpongHeadline() {
-  const headlineRef = useRef<HTMLDivElement | null>(null);
+  const headlineRef = useRef<HTMLHeadingElement | null>(null);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -62,33 +64,20 @@ function PingpongHeadline() {
   }, []);
 
   return (
-    <div
-      ref={headlineRef}
-      className={`mb-[150px] break-keep font-black leading-[1.18] tracking-tight text-black transition-all duration-700 ease-out ${
-        isVisible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
-      }`}
-    >
-      <p className="text-[3.05rem] sm:text-[5.1rem] lg:text-[5.55rem]">한번 올린 영상은</p>
-      <p className="text-[3.05rem] sm:text-[5.1rem] lg:text-[5.55rem]">삭제되지 않으며</p>
-      <p className="mt-7 text-[2.45rem] sm:text-[4.1rem] lg:text-[4.7rem]">
-        강력한 <span className="inline-block text-[#00592e] pingpong-highlight-loop">핑퐁효과</span>를 누리세요
-      </p>
-    </div>
+    <h2 ref={headlineRef} className={styles.headline} data-visible={isVisible}>
+      <span>한번 올린 영상은</span>
+      <span>삭제되지 않으며</span>
+      <span>강력한 <em>핑퐁효과</em>를 누리세요</span>
+    </h2>
   );
 }
 
 export function PingpongEffectSection() {
   return (
-    <section id="pingpong" className="site-section px-4 pb-20 pt-12 text-center sm:px-6 sm:pb-24 sm:pt-16 lg:px-8">
-      <div className="mx-auto w-full max-w-[1024px]">
-        <PingpongHeadline />
-
-        <img
-          src="/pingpong-effect/pingpong-visual.jpg"
-          alt=""
-          className="mx-auto mt-7 h-auto w-full max-w-[928px] mix-blend-multiply"
-        />
-
+    <section id="pingpong" className={styles.section}>
+      <PingpongHeadline />
+      <PlaceGrowthSection />
+      <div className="mx-auto w-full max-w-[1088px] px-4 sm:px-6 lg:px-8">
         <div className="mt-[150px] grid grid-cols-1 items-stretch gap-7 md:grid-cols-2 md:gap-8">
           {pingpongCards.map((card, index) => (
             <article
